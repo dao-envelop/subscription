@@ -1,0 +1,7 @@
+dotenv: .env
+compiler:
+    solc:
+        remappings:
+          - "@openzeppelin=OpenZeppelin/openzeppelin-contracts@4.8.1"
+          #- "@envelopv1=../protocolv1"
+          - "@envelopv1=envelopv1"
