@@ -25,7 +25,6 @@ import "@envelopv1/contracts/LibEnvelopTypes.sol";
     struct Tariff {
         SubscriptionType subscription;
         PayOption[] payWith;
-        //uint256[] services;  // List of service codes available on this tariff
     }
 
     // native subscribtionManager tickets format
@@ -56,6 +55,8 @@ contract SubscriptionRegistry is Ownable {
     
     // mapping from user addres to service contract address  to ticket
     mapping(address => mapping(address => Ticket)) public userTickets;
+
+    // TODO Events
 
     constructor(address _platformOwner) {
         require(_platformOwner != address(0),'Zero platform fee receiver');
