@@ -23,7 +23,8 @@ def test_add_tariff(accounts, dai, sub_reg):
     ))
     assert len(actual_tarifs) == 1
 
-
+# def test_check_price(accounts, dai, sub_reg):
+#     sub_reg
     # [treeMock.insertKeyValue(KEYS_0[0], x, {"from": accounts[0]}) for x in PRICES_1]
     # assert treeMock.valueKeyCount() == 6
     # assert treeMock.medianValue() == PRICES_1[2]
