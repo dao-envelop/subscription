@@ -11,7 +11,7 @@ interface ISubscriptionRegistry   {
     function authorizeAgentForService(
         address _agent,
         uint256[] calldata _serviceTarifIndexes
-    ) external virtual returns (uint256[] memory);
+    ) external returns (uint256[] memory);
 
     function buySubscription(
         address _service,
