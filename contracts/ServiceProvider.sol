@@ -25,21 +25,21 @@ abstract contract ServiceProvider {
         subscriptionRegistry = ISubscriptionRegistry(_subscrRegistry);
 	}
 
-    function registerServiceTarif(Tariff calldata _newTarif) 
-        public virtual returns(uint256)
+    function _registerServiceTarif(Tariff memory _newTarif) 
+        internal virtual returns(uint256)
     {
         return subscriptionRegistry.registerServiceTarif(_newTarif);
     }
 
     
-    function editServiceTarif(
+    function _editServiceTarif(
         uint256 _tarifIndex, 
         uint256 _timelockPeriod,
         uint256 _ticketValidPeriod,
         uint256 _counter,
         bool _isAvailable,
         address _beneficiary
-    ) public virtual 
+    ) internal virtual 
     {
         subscriptionRegistry.editServiceTarif(
             _tarifIndex, 
@@ -51,12 +51,12 @@ abstract contract ServiceProvider {
         );
     }
 
-    function addTarifPayOption(
+    function _addTarifPayOption(
         uint256 _tarifIndex,
         address _paymentToken,
         uint256 _paymentAmount,
         uint16 _agentFeePercent
-    ) external virtual returns(uint256)
+    ) internal virtual returns(uint256)
     {
         return subscriptionRegistry.addTarifPayOption(
             _tarifIndex,
@@ -66,13 +66,13 @@ abstract contract ServiceProvider {
         );
     }
     
-    function editTarifPayOption(
+    function _editTarifPayOption(
         uint256 _tarifIndex,
         uint256 _payWithIndex, 
         address _paymentToken,
         uint256 _paymentAmount,
         uint16 _agentFeePercent
-    ) external virtual 
+    ) internal virtual 
     {
         subscriptionRegistry.editTarifPayOption(
             _tarifIndex,
@@ -83,10 +83,10 @@ abstract contract ServiceProvider {
         );
     } 
 
-    function authorizeAgentForService(
+    function _authorizeAgentForService(
         address _agent,
         uint256[] calldata _serviceTarifIndexes
-    ) external virtual returns (uint256[] memory)
+    ) internal virtual returns (uint256[] memory)
     {
         // TODO Check agent
         return subscriptionRegistry.authorizeAgentForService(
