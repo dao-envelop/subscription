@@ -5,12 +5,12 @@ LOGGER = logging.getLogger(__name__)
 from web3 import Web3
 
 
-
+PRICE = 1e18
 
 def test_add_tariff(accounts, dai, sub_reg):
     sub_reg.setAssetForPaymentState(dai, True, {'from':accounts[0]})
     assert sub_reg.whiteListedForPayments(dai) == True
-    payOptions = [(dai, 1e18, 200),]
+    payOptions = [(dai, PRICE, 200),]
     subscriptionType = (0,0,1,True, accounts[3])
     tarif = (subscriptionType, payOptions)
     sub_reg.registerServiceTarif(tarif,{'from':accounts[1]})
@@ -19,7 +19,7 @@ def test_add_tariff(accounts, dai, sub_reg):
         'Service:({}),'
         '\ntarifs = {}'.format(
             accounts[1],
-            actual_tarifs
+            actual_tarifs[0]
     ))
     assert len(actual_tarifs) == 1
 

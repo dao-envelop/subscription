@@ -36,6 +36,8 @@ import "@envelopv1/contracts/LibEnvelopTypes.sol";
 contract SubscriptionRegistry is Ownable {
     using SafeERC20 for IERC20;
 
+    uint256 constant public PERCENT_DENOMINATOR = 10000;
+
     address public platformOwner; // Envelop Multisig
     uint16 public platformFeePercent = 50; // 100%-10000, 20%-2000, 3%-300
 
@@ -283,9 +285,11 @@ contract SubscriptionRegistry is Ownable {
                 availableTariffs[_service][_tarifIndex].payWith[_payWithIndex].paymentToken,
                 availableTariffs[_service][_tarifIndex].payWith[_payWithIndex].paymentAmount
                 + availableTariffs[_service][_tarifIndex].payWith[_payWithIndex].paymentAmount
-                    *100/availableTariffs[_service][_tarifIndex].payWith[_payWithIndex].agentFeePercent
+                    *availableTariffs[_service][_tarifIndex].payWith[_payWithIndex].agentFeePercent
+                    /PERCENT_DENOMINATOR
                 + availableTariffs[_service][_tarifIndex].payWith[_payWithIndex].paymentAmount
-                        *100/_platformFeePercent(_service, _tarifIndex, _payWithIndex) 
+                        *_platformFeePercent(_service, _tarifIndex, _payWithIndex) 
+                        /PERCENT_DENOMINATOR
             );
         }
     }
