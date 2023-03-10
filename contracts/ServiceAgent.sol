@@ -27,7 +27,7 @@ abstract contract ServiceAgent{
         uint256 _payWithIndex,
         address _buyFor,
         address _payer
-    ) external returns(Ticket memory ticket)
+    ) public returns(Ticket memory ticket)
     {
         // get service provider
         IServiceProvider sP = IServiceProvider(_service);

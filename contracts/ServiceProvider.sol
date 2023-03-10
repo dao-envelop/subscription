@@ -85,7 +85,7 @@ abstract contract ServiceProvider {
 
     function _authorizeAgentForService(
         address _agent,
-        uint256[] calldata _serviceTarifIndexes
+        uint256[] memory _serviceTarifIndexes
     ) internal virtual returns (uint256[] memory)
     {
         // TODO Check agent

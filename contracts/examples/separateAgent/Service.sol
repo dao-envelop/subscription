@@ -7,7 +7,9 @@ import '../../ServiceProvider.sol';
 
 contract Service is ServiceProvider, Ownable {
     
-    uint256[] public myTarifIndex;
+    uint256[] public myTarifIndexes;
+
+    event ServiceOK(uint256 param, address _provider);
 
     constructor(address _subscrRegistry, address _defaultPayToken)
         ServiceProvider(_subscrRegistry)
@@ -32,8 +34,24 @@ contract Service is ServiceProvider, Ownable {
         );
 
         uint256 newTIndex = _registerServiceTarif(defaultTarif);
-        myTarifIndex.push(newTIndex); 
+        myTarifIndexes.push(newTIndex); 
+    }
 
+    function setAgent(
+        address _agent
+    ) external onlyOwner returns(uint256[] memory){
+        uint256[] memory idxs = new uint256[](myTarifIndexes.length);
+        idxs[0]=myTarifIndexes[0];
+        return _authorizeAgentForService(_agent, idxs);
+    }
+
+    function getService(uint256 param) external {
+        
+        // Check ticket
+        _checkAndFixSubscription(msg.sender);
+        
+        // put main service code below
+        emit ServiceOK(param, address(this));
     }
 
      
