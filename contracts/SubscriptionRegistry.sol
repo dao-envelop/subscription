@@ -1,5 +1,6 @@
 // SPDX-License-Identifier: MIT
 // ENVELOP(NIFTSY) protocol V1 for NFT. Subscription Manager Contract V2
+pragma solidity 0.8.16;
 
 import "@openzeppelin/contracts/access/Ownable.sol";
 import "@openzeppelin/contracts/token/ERC20/utils/SafeERC20.sol";
@@ -8,12 +9,6 @@ import "@envelopv1/interfaces/ISubscriptionManager.sol";
 import "@envelopv1/contracts/LibEnvelopTypes.sol";
 //import "./LibEnvelopTypes.sol";
 
-
-pragma solidity 0.8.16;
-
-contract SubscriptionRegestry is Ownable {
-    using SafeERC20 for IERC20;
-
     struct SubscriptionType {
         uint256 timelockPeriod;    // in seconds e.g. 3600*24*30*12 = 31104000 = 1 year
         uint256 ticketValidPeriod; // in seconds e.g. 3600*24*30    =  2592000 = 1 month
@@ -21,7 +16,6 @@ contract SubscriptionRegestry is Ownable {
         bool isAvailable;
         address beneficiary;
     }
-
     struct PayOption {
         address paymentToken;
         uint256 paymentAmount;
@@ -39,6 +33,9 @@ contract SubscriptionRegestry is Ownable {
         uint256 validUntil; // Unixdate, tickets not valid after
         uint256 countsLeft; // for tarif with fixed use counter
     }
+
+contract SubscriptionRegistry is Ownable {
+    using SafeERC20 for IERC20;
 
     address public platformOwner; // Envelop Multisig
     uint16 public platformFeePercent = 50; // 100%-10000, 20%-2000, 3%-300
@@ -411,7 +408,7 @@ contract SubscriptionRegestry is Ownable {
     //     );
     // }
 
-    function setPreviousRegestry(address _registry) external onlyOwner {
+    function setPreviousRegistry(address _registry) external onlyOwner {
         previousRegistry = _registry;
     }
     /////////////////////////////////////////////////////////////////////
