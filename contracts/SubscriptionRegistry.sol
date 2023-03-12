@@ -581,6 +581,17 @@ contract SubscriptionRegistry is Ownable {
         internal returns(uint256) 
     {
         require (_newTarif.payWith.length > 0, 'No payment method');
+        for (uint256 i; i < _newTarif.payWith.length; ++i){
+            require(
+                whiteListedForPayments[_newTarif.payWith[i].paymentToken],
+                'Not whitelisted for payments'
+            );      
+        }
+        require(
+            _newTarif.subscription.ticketValidPeriod > 0 
+            || _newTarif.subscription.counter > 0,
+            'Tariff has no valid ticket option'  
+        );
         availableTariffs[_service].push(_newTarif);
         return availableTariffs[_service].length - 1;
     }
@@ -618,6 +629,7 @@ contract SubscriptionRegistry is Ownable {
         uint16 _agentFeePercent
     ) internal returns(uint256)
     {
+        require(whiteListedForPayments[_paymentToken], 'Not whitelisted for payments');
         availableTariffs[_service][_tarifIndex].payWith.push(
             PayOption(_paymentToken, _paymentAmount, _agentFeePercent)
         ); 
@@ -633,6 +645,7 @@ contract SubscriptionRegistry is Ownable {
         uint16 _agentFeePercent
     ) internal  
     {
+        require(whiteListedForPayments[_paymentToken], 'Not whitelisted for payments');
         availableTariffs[_service][_tarifIndex].payWith[_payWithIndex] 
         = PayOption(_paymentToken, _paymentAmount, _agentFeePercent);    
     }
