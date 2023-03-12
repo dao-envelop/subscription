@@ -531,7 +531,37 @@ contract SubscriptionRegistry is Ownable {
                 }
 
             } else {
-              // pay with native token(eth, bnb, etc)
+                // pay with native token(eth, bnb, etc)
+                (, uint256 needPay) = getTicketPrice(_service, _tarifIndex,_payWithIndex);
+                require(msg.value >= needPay, 'Not enough ether');
+                // 2.4. Body ether payment
+                sendValue(
+                    payable(availableTariffs[_service][_tarifIndex].subscription.beneficiary),
+                    availableTariffs[_service][_tarifIndex].payWith[_payWithIndex].paymentAmount
+                );
+
+                // 2.5. Agent fee payment
+                sendValue(
+                    payable(availableTariffs[_service][_tarifIndex].subscription.beneficiary),
+                    availableTariffs[_service][_tarifIndex].payWith[_payWithIndex].paymentAmount
+                    *100/availableTariffs[_service][_tarifIndex].payWith[_payWithIndex].agentFeePercent
+                );
+
+                // 2.3. Platform fee 
+                uint256 _pFee = _platformFeePercent(_service, _tarifIndex, _payWithIndex); 
+                if (_pFee > 0) {
+
+                    sendValue(
+                        payable(platformOwner),
+                        availableTariffs[_service][_tarifIndex].payWith[_payWithIndex].paymentAmount
+                        *100/_pFee
+                    );
+                }
+                // return change
+                if  ((msg.value - needPay) > 0) {
+                    address payable s = payable(_payer);
+                    s.transfer(msg.value - needPay);
+                }
             }
         }
     }
@@ -633,5 +663,12 @@ contract SubscriptionRegistry is Ownable {
                 return authorized;
             }
         }
+    }
+
+    function sendValue(address payable recipient, uint256 amount) internal {
+        require(address(this).balance >= amount, "Address: insufficient balance");
+
+        (bool success, ) = recipient.call{value: amount}("");
+        require(success, "Address: unable to send value, recipient may have reverted");
     }
 }
