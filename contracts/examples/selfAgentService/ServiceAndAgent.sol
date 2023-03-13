@@ -6,7 +6,7 @@ import "@openzeppelin/contracts/access/Ownable.sol";
 import '../../ServiceProvider.sol';
 import '../../ServiceAgent.sol';
 
-contract ServicAndAgent is ServiceProvider, ServiceAgent, Ownable {
+contract ServiceAndAgent is ServiceProvider, ServiceAgent, Ownable {
     
     uint256[] public myTarifIndexes;
 

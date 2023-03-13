@@ -4,27 +4,15 @@ pragma solidity 0.8.16;
 //import "@envelopv1/interfaces/ISubscriptionManager.sol";
 import "@openzeppelin/contracts/token/ERC721/extensions/ERC721URIStorage.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
-import '../../ServiceProvider.sol';
-import '../../ServiceAgent.sol';
+import '../ServiceProvider.sol';
+import '../ServiceAgent.sol';
 
 contract MinterServiceNoAgent is ERC721URIStorage, ServiceProvider, ServiceAgent, Ownable {
 	
-	constructor(address _subscrRegistry)
-	        ServiceProvider(_subscrRegistry){}
-
-	    /*function buyTicket() external {
-	        Ticket memory t;
-	        t = buySubscription(
-	            address(this),
-	            0, //  _tarifIndex,
-	            0, // _payWithIndex,
-	            msg.sender, // _buyFor,
-	            msg.sender  // _payer
-	        );
-	        
-	        // put additional code below
-	        emit TicketSold(msg.sender, address(this), t);
-	    }*/
+	constructor(address _subscrRegistry, string memory name_,
+        string memory symbol_) 
+			ERC721(name_, symbol_)
+	        ServiceProvider(_subscrRegistry) {}
 
 	    function registerServiceTarif(Tariff memory _newTarif) 
 	        external onlyOwner returns(uint256)
@@ -103,7 +91,7 @@ contract MinterServiceNoAgent is ERC721URIStorage, ServiceProvider, ServiceAgent
 	        external 
 	        returns (bool ok) 
 	    {
-	            ok = _checkAndFixSubscription(address _user);
+	            ok = _checkAndFixSubscription(_user);
 	    }
 
 	    
@@ -121,8 +109,7 @@ contract MinterServiceNoAgent is ERC721URIStorage, ServiceProvider, ServiceAgent
 	        returns (bool ok)
 	    {
 	            ok = _checkUserSubscription(
-	                _user,
-	                address(this)  
+	                _user
 	            );
 	    }
 

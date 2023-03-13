@@ -32,3 +32,8 @@ def serviceAndAgent(accounts, ServicAndAgent, dai, sub_reg):
     s = accounts[0].deploy(ServicAndAgent,sub_reg, dai)
     yield s
 
+@pytest.fixture(scope="module")
+def minter1(accounts, MinterServiceNoAgent, sub_reg):
+    s = accounts[0].deploy(MinterServiceNoAgent,sub_reg, "Minter without Agent", 'MWA')
+    yield s
+
