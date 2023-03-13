@@ -8,7 +8,7 @@ import '../../ServiceAgent.sol';
 
 contract ServiceAndAgent is ServiceProvider, ServiceAgent, Ownable {
     
-    uint256[] public myTarifIndexes;
+    uint256[] public myTariffIndexes;
 
     event ServiceOK(uint256 param, address _provider);
     event TicketSold(address indexed buyer, address indexed service, Ticket ticket);
@@ -24,7 +24,7 @@ contract ServiceAndAgent is ServiceProvider, ServiceAgent, Ownable {
                 1000  // agentFeePercent
         );
 
-        Tariff memory defaultTarif = Tariff(
+        Tariff memory defaultTariff = Tariff(
             SubscriptionType(
                 0, // timelockPeriod
                 0, // ticketValidPeriod
@@ -35,13 +35,13 @@ contract ServiceAndAgent is ServiceProvider, ServiceAgent, Ownable {
             poArray
         );
 
-        uint256 newTIndex = _registerServiceTarif(defaultTarif);
-        myTarifIndexes.push(newTIndex); 
+        uint256 newTIndex = _registerServiceTariff(defaultTariff);
+        myTariffIndexes.push(newTIndex); 
     }
 
     function setAgent() external onlyOwner returns(uint256[] memory){
-        uint256[] memory idxs = new uint256[](myTarifIndexes.length);
-        idxs[0]=myTarifIndexes[0];
+        uint256[] memory idxs = new uint256[](myTariffIndexes.length);
+        idxs[0]=myTariffIndexes[0];
         return _authorizeAgentForService(address(this), idxs);
     }
 

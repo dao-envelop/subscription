@@ -65,18 +65,18 @@ contract SubscriptionRegistry is Ownable {
         platformOwner = _platformOwner;
     } 
    
-    function registerServiceTarif(Tariff calldata _newTarif) 
+    function registerServiceTariff(Tariff calldata _newTariff) 
         external 
         returns(uint256)
     {
         // TODO
         // Tarif structure check
         // PayWith array whiteList check
-        return _addTarif(msg.sender, _newTarif);
+        return _addTariff(msg.sender, _newTariff);
     }
 
-    function editServiceTarif(
-        uint256 _tarifIndex, 
+    function editServiceTariff(
+        uint256 _tariffIndex, 
         uint256 _timelockPeriod,
         uint256 _ticketValidPeriod,
         uint256 _counter,
@@ -86,11 +86,11 @@ contract SubscriptionRegistry is Ownable {
         external
     {
         // TODO
-        // Tarif structure check
+        // Tariff structure check
         // PayWith array whiteList check
-        _editTarif(
+        _editTariff(
             msg.sender,
-            _tarifIndex, 
+            _tariffIndex, 
             _timelockPeriod,
             _ticketValidPeriod,
             _counter,
@@ -100,33 +100,33 @@ contract SubscriptionRegistry is Ownable {
 
     }
 
-    function addTarifPayOption(
-        uint256 _tarifIndex,
+    function addTariffPayOption(
+        uint256 _tariffIndex,
         address _paymentToken,
         uint256 _paymentAmount,
         uint16 _agentFeePercent
     ) external returns(uint256)
     {
-        return _addTarifPayOption(
+        return _addTariffPayOption(
             msg.sender,
-            _tarifIndex,
+            _tariffIndex,
             _paymentToken,
             _paymentAmount,
             _agentFeePercent
         );
     }
 
-    function editTarifPayOption(
-        uint256 _tarifIndex,
+    function editTariffPayOption(
+        uint256 _tariffIndex,
         uint256 _payWithIndex, 
         address _paymentToken,
         uint256 _paymentAmount,
         uint16 _agentFeePercent
     ) external 
     {
-        _editTarifPayOption(
+        _editTariffPayOption(
             msg.sender,
-            _tarifIndex,
+            _tariffIndex,
             _payWithIndex, 
             _paymentToken,
             _paymentAmount,
@@ -137,28 +137,28 @@ contract SubscriptionRegistry is Ownable {
     // Only service contract must call this function
     function authorizeAgentForService(
         address _agent,
-        // uint256 _platformTarifIndex,
+        // uint256 _platformTariffIndex,
         // uint256 _payWithIndex,
         // address _payer,
-        uint256[] calldata _serviceTarifIndexes
+        uint256[] calldata _serviceTariffIndexes
     ) external virtual returns (uint256[] memory) 
     {
-        // remove previouse tarifs
+        // remove previouse tariffs
         delete agentServiceRegistry[msg.sender][_agent];
-        uint256[] storage currentServiceTarifsOfAgent = agentServiceRegistry[msg.sender][_agent];
-        // check that adding tarifs still available
-        for(uint256 i; i < _serviceTarifIndexes.length; ++ i) {
-            if (availableTariffs[msg.sender][_serviceTarifIndexes[i]].subscription.isAvailable){
-                currentServiceTarifsOfAgent.push(_serviceTarifIndexes[i]);
+        uint256[] storage currentServiceTariffsOfAgent = agentServiceRegistry[msg.sender][_agent];
+        // check that adding tariffs still available
+        for(uint256 i; i < _serviceTariffIndexes.length; ++ i) {
+            if (availableTariffs[msg.sender][_serviceTariffIndexes[i]].subscription.isAvailable){
+                currentServiceTariffsOfAgent.push(_serviceTariffIndexes[i]);
             }
         }
-        return currentServiceTarifsOfAgent;
+        return currentServiceTariffsOfAgent;
     }
     
     // Available only for agents
     function buySubscription(
         address _service,
-        uint256 _tarifIndex,
+        uint256 _tariffIndex,
         uint256 _payWithIndex,
         address _buyFor,
         address _payer
@@ -168,19 +168,19 @@ contract SubscriptionRegistry is Ownable {
         require(_buyFor != address(0),'Cant buy ticket for nobody');
 
         require(
-            availableTariffs[_service][_tarifIndex].subscription.isAvailable,
+            availableTariffs[_service][_tariffIndex].subscription.isAvailable,
             'This subscription not available'
         );
 
         require(
-            availableTariffs[_service][_tarifIndex].payWith[_payWithIndex].paymentAmount > 0,
+            availableTariffs[_service][_tariffIndex].payWith[_payWithIndex].paymentAmount > 0,
             'This Payment option not available'
         );
 
         // Check that agent is authorized for purchace of this service
         require(
-            _isAgentAuthorized(msg.sender, _service, _tarifIndex), 
-            'Agent not authorized for this service tarif' 
+            _isAgentAuthorized(msg.sender, _service, _tariffIndex), 
+            'Agent not authorized for this service tariff' 
         );
         
         (bool isValid, bool needFix) = _isTicketValid(_buyFor, _service);
@@ -188,12 +188,12 @@ contract SubscriptionRegistry is Ownable {
 
         //lets safe user ticket (only one ticket available in this version)
         userTickets[_buyFor][_service] = Ticket(
-            availableTariffs[_service][_tarifIndex].subscription.ticketValidPeriod + block.timestamp,
-            availableTariffs[_service][_tarifIndex].subscription.counter
+            availableTariffs[_service][_tariffIndex].subscription.ticketValidPeriod + block.timestamp,
+            availableTariffs[_service][_tariffIndex].subscription.counter
         );
 
         // Lets receive payment tokens FROM sender
-        _processPayment(_service, _tarifIndex, _payWithIndex, _payer);
+        _processPayment(_service, _tariffIndex, _payWithIndex, _payer);
         
 
     }
@@ -270,31 +270,31 @@ contract SubscriptionRegistry is Ownable {
 
     function getTicketPrice(
         address _service,
-        uint256 _tarifIndex,
+        uint256 _tariffIndex,
         uint256 _payWithIndex
     ) public view virtual returns (address, uint256) 
     {
-        if (availableTariffs[_service][_tarifIndex].subscription.timelockPeriod != 0)
+        if (availableTariffs[_service][_tariffIndex].subscription.timelockPeriod != 0)
         {
             return(
-                availableTariffs[_service][_tarifIndex].payWith[_payWithIndex].paymentToken,
-                availableTariffs[_service][_tarifIndex].payWith[_payWithIndex].paymentAmount
+                availableTariffs[_service][_tariffIndex].payWith[_payWithIndex].paymentToken,
+                availableTariffs[_service][_tariffIndex].payWith[_payWithIndex].paymentAmount
             );
         } else {
             return(
-                availableTariffs[_service][_tarifIndex].payWith[_payWithIndex].paymentToken,
-                availableTariffs[_service][_tarifIndex].payWith[_payWithIndex].paymentAmount
-                + availableTariffs[_service][_tarifIndex].payWith[_payWithIndex].paymentAmount
-                    *availableTariffs[_service][_tarifIndex].payWith[_payWithIndex].agentFeePercent
+                availableTariffs[_service][_tariffIndex].payWith[_payWithIndex].paymentToken,
+                availableTariffs[_service][_tariffIndex].payWith[_payWithIndex].paymentAmount
+                + availableTariffs[_service][_tariffIndex].payWith[_payWithIndex].paymentAmount
+                    *availableTariffs[_service][_tariffIndex].payWith[_payWithIndex].agentFeePercent
                     /PERCENT_DENOMINATOR
-                + availableTariffs[_service][_tarifIndex].payWith[_payWithIndex].paymentAmount
-                        *_platformFeePercent(_service, _tarifIndex, _payWithIndex) 
+                + availableTariffs[_service][_tariffIndex].payWith[_payWithIndex].paymentAmount
+                        *_platformFeePercent(_service, _tariffIndex, _payWithIndex) 
                         /PERCENT_DENOMINATOR
             );
         }
     }
 
-    function getAvailableAgentsTarifForService(
+    function getAvailableAgentsTariffForService(
         address _agent, 
         address _service
     ) external view virtual returns(Tariff[] memory) 
@@ -344,74 +344,7 @@ contract SubscriptionRegistry is Ownable {
         platformOwner = _newOwner;
     }
 
-    // function registerPlatformTarif(Tariff calldata _newTarif) 
-    //     external onlyOwner
-    //     returns(uint256)
-    // {
-    //     // TODO
-    //     // Tarif structure check
-    //     // PayWith array whiteList check
-    //     _addTarif(address(this), _newTarif);
-    // }
-
-    // function editPlatformTarif(
-    //     uint256 _tarifIndex, 
-    //     uint256 _timelockPeriod,
-    //     uint256 _ticketValidPeriod,
-    //     uint256 _counter,
-    //     bool _isAvailable,
-    //     address _beneficiary
-    // ) 
-    //     external onlyOwner
-    // {
-    //     // TODO
-    //     // Tarif structure check
-    //     // PayWith array whiteList check
-    //     _editTarif(
-    //         address(this),
-    //         _tarifIndex, 
-    //         _timelockPeriod,
-    //         _ticketValidPeriod,
-    //         _counter,
-    //         _isAvailable,
-    //         _beneficiary
-    //     );
-
-    // }
-
-    // function addPlatformTarifPayOption(
-    //     uint256 _tarifIndex,
-    //     address _paymentToken,
-    //     uint256 _paymentAmount,
-    //     uint16 _agentFeePercent
-    // ) external onlyOwner returns(uint256)
-    // {
-    //     return _addTarifPayOption(
-    //         address(this),
-    //         _tarifIndex,
-    //         _paymentToken,
-    //         _paymentAmount,
-    //         _agentFeePercent
-    //     );
-    // }
-
-    // function editPlatformTarifPayOption(
-    //     uint256 _tarifIndex,
-    //     uint256 _payWithIndex, 
-    //     address _paymentToken,
-    //     uint256 _paymentAmount,
-    //     uint16 _agentFeePercent
-    // ) external onlyOwner
-    // {
-    //     _editTarifPayOption(
-    //         address(this),
-    //         _tarifIndex,
-    //         _payWithIndex, 
-    //         _paymentToken,
-    //         _paymentAmount,
-    //         _agentFeePercent
-    //     );
-    // }
+    
 
     function setPreviousRegistry(address _registry) external onlyOwner {
         previousRegistry = _registry;
@@ -420,7 +353,7 @@ contract SubscriptionRegistry is Ownable {
     
     function _processPayment(
         address _service,
-        uint256 _tarifIndex,
+        uint256 _tariffIndex,
         uint256 _payWithIndex,
         address _payer
     ) 
@@ -431,23 +364,23 @@ contract SubscriptionRegistry is Ownable {
         // there are two payment method for this implementation.
         // 1. with wrap and lock in asset (no fees)
         // 2. simple payment (agent & platform fee enabled)
-        if (availableTariffs[_service][_tarifIndex].subscription.timelockPeriod != 0){
+        if (availableTariffs[_service][_tariffIndex].subscription.timelockPeriod != 0){
             require(msg.value == 0, 'Ether Not accepted in this method');
             // 1. with wrap and lock in asset
             IERC20(
-                availableTariffs[_service][_tarifIndex].payWith[_payWithIndex].paymentToken
+                availableTariffs[_service][_tariffIndex].payWith[_payWithIndex].paymentToken
             ).safeTransferFrom(
                 _payer, 
                 address(this),
-                availableTariffs[_service][_tarifIndex].payWith[_payWithIndex].paymentAmount
+                availableTariffs[_service][_tariffIndex].payWith[_payWithIndex].paymentAmount
             );
 
             // Lets approve received for wrap 
             IERC20(
-                availableTariffs[_service][_tarifIndex].payWith[_payWithIndex].paymentToken
+                availableTariffs[_service][_tariffIndex].payWith[_payWithIndex].paymentToken
             ).safeApprove(
                 mainWrapper,
-                availableTariffs[_service][_tarifIndex].payWith[_payWithIndex].paymentAmount
+                availableTariffs[_service][_tariffIndex].payWith[_payWithIndex].paymentAmount
             );
 
             // Lets wrap with timelock and appropriate params
@@ -457,7 +390,7 @@ contract SubscriptionRegistry is Ownable {
             // Only need set timelock for this wNFT
             timeLock[0] = ETypes.Lock(
                 0x00, // timelock
-                availableTariffs[_service][_tarifIndex].subscription.timelockPeriod + block.timestamp
+                availableTariffs[_service][_tariffIndex].subscription.timelockPeriod + block.timestamp
             ); 
             _inData = ETypes.INData(
                 ETypes.AssetItem(
@@ -477,10 +410,10 @@ contract SubscriptionRegistry is Ownable {
             _collateralERC20[0] = ETypes.AssetItem(
                 ETypes.Asset(
                     ETypes.AssetType.ERC20,
-                    availableTariffs[_service][_tarifIndex].payWith[_payWithIndex].paymentToken
+                    availableTariffs[_service][_tariffIndex].payWith[_payWithIndex].paymentToken
                 ),
                 0,
-                availableTariffs[_service][_tarifIndex].payWith[_payWithIndex].paymentAmount
+                availableTariffs[_service][_tariffIndex].payWith[_payWithIndex].paymentAmount
             );
             
             ITrustedWrapper(mainWrapper).wrap(
@@ -491,7 +424,7 @@ contract SubscriptionRegistry is Ownable {
 
         } else {
             // 2. simple payment
-            if (availableTariffs[_service][_tarifIndex]
+            if (availableTariffs[_service][_tariffIndex]
                 .payWith[_payWithIndex]
                 .paymentToken != address(0)
             ) 
@@ -500,60 +433,60 @@ contract SubscriptionRegistry is Ownable {
                 require(msg.value == 0, 'Ether Not accepted in this method');
                 // 2.1. Body payment  
                 IERC20(
-                    availableTariffs[_service][_tarifIndex].payWith[_payWithIndex].paymentToken
+                    availableTariffs[_service][_tariffIndex].payWith[_payWithIndex].paymentToken
                 ).safeTransferFrom(
                     _payer, 
-                    availableTariffs[_service][_tarifIndex].subscription.beneficiary,
-                    availableTariffs[_service][_tarifIndex].payWith[_payWithIndex].paymentAmount
+                    availableTariffs[_service][_tariffIndex].subscription.beneficiary,
+                    availableTariffs[_service][_tariffIndex].payWith[_payWithIndex].paymentAmount
                 );
 
                 // 2.2. Agent fee payment
                 IERC20(
-                    availableTariffs[_service][_tarifIndex].payWith[_payWithIndex].paymentToken
+                    availableTariffs[_service][_tariffIndex].payWith[_payWithIndex].paymentToken
                 ).safeTransferFrom(
                     _payer, 
                     msg.sender,
-                    availableTariffs[_service][_tarifIndex].payWith[_payWithIndex].paymentAmount
-                    *100/availableTariffs[_service][_tarifIndex].payWith[_payWithIndex].agentFeePercent
+                    availableTariffs[_service][_tariffIndex].payWith[_payWithIndex].paymentAmount
+                    *100/availableTariffs[_service][_tariffIndex].payWith[_payWithIndex].agentFeePercent
                 );
 
                 // 2.3. Platform fee 
-                uint256 _pFee = _platformFeePercent(_service, _tarifIndex, _payWithIndex); 
+                uint256 _pFee = _platformFeePercent(_service, _tariffIndex, _payWithIndex); 
                 if (_pFee > 0) {
                     IERC20(
-                        availableTariffs[_service][_tarifIndex].payWith[_payWithIndex].paymentToken
+                        availableTariffs[_service][_tariffIndex].payWith[_payWithIndex].paymentToken
                     ).safeTransferFrom(
                         _payer, 
                         platformOwner, //
-                        availableTariffs[_service][_tarifIndex].payWith[_payWithIndex].paymentAmount
+                        availableTariffs[_service][_tariffIndex].payWith[_payWithIndex].paymentAmount
                         *100/_pFee
                     );
                 }
 
             } else {
                 // pay with native token(eth, bnb, etc)
-                (, uint256 needPay) = getTicketPrice(_service, _tarifIndex,_payWithIndex);
+                (, uint256 needPay) = getTicketPrice(_service, _tariffIndex,_payWithIndex);
                 require(msg.value >= needPay, 'Not enough ether');
                 // 2.4. Body ether payment
                 sendValue(
-                    payable(availableTariffs[_service][_tarifIndex].subscription.beneficiary),
-                    availableTariffs[_service][_tarifIndex].payWith[_payWithIndex].paymentAmount
+                    payable(availableTariffs[_service][_tariffIndex].subscription.beneficiary),
+                    availableTariffs[_service][_tariffIndex].payWith[_payWithIndex].paymentAmount
                 );
 
                 // 2.5. Agent fee payment
                 sendValue(
-                    payable(availableTariffs[_service][_tarifIndex].subscription.beneficiary),
-                    availableTariffs[_service][_tarifIndex].payWith[_payWithIndex].paymentAmount
-                    *100/availableTariffs[_service][_tarifIndex].payWith[_payWithIndex].agentFeePercent
+                    payable(availableTariffs[_service][_tariffIndex].subscription.beneficiary),
+                    availableTariffs[_service][_tariffIndex].payWith[_payWithIndex].paymentAmount
+                    *100/availableTariffs[_service][_tariffIndex].payWith[_payWithIndex].agentFeePercent
                 );
 
                 // 2.3. Platform fee 
-                uint256 _pFee = _platformFeePercent(_service, _tarifIndex, _payWithIndex); 
+                uint256 _pFee = _platformFeePercent(_service, _tariffIndex, _payWithIndex); 
                 if (_pFee > 0) {
 
                     sendValue(
                         payable(platformOwner),
-                        availableTariffs[_service][_tarifIndex].payWith[_payWithIndex].paymentAmount
+                        availableTariffs[_service][_tariffIndex].payWith[_payWithIndex].paymentAmount
                         *100/_pFee
                     );
                 }
@@ -570,43 +503,36 @@ contract SubscriptionRegistry is Ownable {
     // Can be ovveriden in other cases
     function _platformFeePercent(
         address _service, 
-        uint256 _tarifIndex, 
+        uint256 _tariffIndex, 
         uint256  _payWithIndex
     ) internal view virtual returns(uint256) 
     {
         return platformFeePercent;
     }
 
-    function _addTarif(address _service, Tariff calldata _newTarif) 
+    function _addTariff(address _service, Tariff calldata _newTariff) 
         internal returns(uint256) 
     {
-        require (_newTarif.payWith.length > 0, 'No payment method');
-        for (uint256 i; i < _newTarif.payWith.length; ++i){
+        require (_newTariff.payWith.length > 0, 'No payment method');
+        for (uint256 i; i < _newTariff.payWith.length; ++i){
             require(
-                whiteListedForPayments[_newTarif.payWith[i].paymentToken],
+                whiteListedForPayments[_newTariff.payWith[i].paymentToken],
                 'Not whitelisted for payments'
             );      
         }
         require(
-            _newTarif.subscription.ticketValidPeriod > 0 
-            || _newTarif.subscription.counter > 0,
+            _newTariff.subscription.ticketValidPeriod > 0 
+            || _newTariff.subscription.counter > 0,
             'Tariff has no valid ticket option'  
         );
-        availableTariffs[_service].push(_newTarif);
+        availableTariffs[_service].push(_newTariff);
         return availableTariffs[_service].length - 1;
     }
 
-    // function _removeTarif(address _service, uint256 _tarifIndex) 
-    //     internal  
-    // {
-    //     //TODO
-    //     //Check that there is no agents with active tickets
-    //     delete availableTariffs[_service];
-    // }
 
-    function _editTarif(
+    function _editTariff(
         address _service,
-        uint256 _tarifIndex, 
+        uint256 _tariffIndex, 
         uint256 _timelockPeriod,
         uint256 _ticketValidPeriod,
         uint256 _counter,
@@ -614,31 +540,31 @@ contract SubscriptionRegistry is Ownable {
         address _beneficiary
     ) internal  
     {
-        availableTariffs[_service][_tarifIndex].subscription.timelockPeriod    = _timelockPeriod;
-        availableTariffs[_service][_tarifIndex].subscription.ticketValidPeriod = _ticketValidPeriod;
-        availableTariffs[_service][_tarifIndex].subscription.counter = _counter;
-        availableTariffs[_service][_tarifIndex].subscription.isAvailable = _isAvailable;    
-        availableTariffs[_service][_tarifIndex].subscription.beneficiary = _beneficiary;    
+        availableTariffs[_service][_tariffIndex].subscription.timelockPeriod    = _timelockPeriod;
+        availableTariffs[_service][_tariffIndex].subscription.ticketValidPeriod = _ticketValidPeriod;
+        availableTariffs[_service][_tariffIndex].subscription.counter = _counter;
+        availableTariffs[_service][_tariffIndex].subscription.isAvailable = _isAvailable;    
+        availableTariffs[_service][_tariffIndex].subscription.beneficiary = _beneficiary;    
     }
    
-    function _addTarifPayOption(
+    function _addTariffPayOption(
         address _service,
-        uint256 _tarifIndex,
+        uint256 _tariffIndex,
         address _paymentToken,
         uint256 _paymentAmount,
         uint16 _agentFeePercent
     ) internal returns(uint256)
     {
         require(whiteListedForPayments[_paymentToken], 'Not whitelisted for payments');
-        availableTariffs[_service][_tarifIndex].payWith.push(
+        availableTariffs[_service][_tariffIndex].payWith.push(
             PayOption(_paymentToken, _paymentAmount, _agentFeePercent)
         ); 
-        return availableTariffs[_service][_tarifIndex].payWith.length - 1;
+        return availableTariffs[_service][_tariffIndex].payWith.length - 1;
     }
 
-    function _editTarifPayOption(
+    function _editTariffPayOption(
         address _service,
-        uint256 _tarifIndex,
+        uint256 _tariffIndex,
         uint256 _payWithIndex, 
         address _paymentToken,
         uint256 _paymentAmount,
@@ -646,7 +572,7 @@ contract SubscriptionRegistry is Ownable {
     ) internal  
     {
         require(whiteListedForPayments[_paymentToken], 'Not whitelisted for payments');
-        availableTariffs[_service][_tarifIndex].payWith[_payWithIndex] 
+        availableTariffs[_service][_tariffIndex].payWith[_payWithIndex] 
         = PayOption(_paymentToken, _paymentAmount, _agentFeePercent);    
     }
 
@@ -664,14 +590,14 @@ contract SubscriptionRegistry is Ownable {
     function _isAgentAuthorized(
         address _agent, 
         address _service, 
-        uint256 _tarifIndex
+        uint256 _tariffIndex
     ) 
         internal
         view
         returns(bool authorized)
     {
         for (uint256 i; i < agentServiceRegistry[_service][_agent].length; ++ i){
-            if (agentServiceRegistry[_service][_agent][i] == _tarifIndex){
+            if (agentServiceRegistry[_service][_agent][i] == _tariffIndex){
                 authorized = true;
                 return authorized;
             }

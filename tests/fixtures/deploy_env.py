@@ -19,6 +19,7 @@ def sub_reg(accounts, SubscriptionRegistry):
 #-------------------------------------------------------------------
 @pytest.fixture(scope="module")
 def singleServiceProvider(accounts, ServiceProvider, dai, sub_reg):
+    sub_reg.setAssetForPaymentState(dai.address, True, {'from':accounts[0]})
     s = accounts[0].deploy(ServiceProvider,sub_reg, dai)
     yield s
 
@@ -28,8 +29,10 @@ def singleAgent(accounts, Agent):
     yield a
 
 @pytest.fixture(scope="module")
-def serviceAndAgent(accounts, ServicAndAgent, dai, sub_reg):
-    s = accounts[0].deploy(ServicAndAgent,sub_reg, dai)
+def serviceAndAgent(accounts, ServiceAndAgent, dai, weth, sub_reg):
+    sub_reg.setAssetForPaymentState(dai.address, True, {'from':accounts[0]})
+    #sub_reg.setAssetForPaymentState(weth.address, True, {'from':accounts[0]})
+    s = accounts[0].deploy(ServiceAndAgent,sub_reg, dai)
     yield s
 
 @pytest.fixture(scope="module")

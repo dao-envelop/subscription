@@ -5,24 +5,27 @@ pragma solidity 0.8.16;
 import {SubscriptionType, PayOption, Tariff, Ticket} from "../contracts/SubscriptionRegistry.sol";
 interface ISubscriptionRegistry   {
 
-    
-    function registerServiceTarif(Tariff calldata _newTarif) external returns(uint256);
+    event PlatfromFeeChanged(uint256 newPercent);
+    event WhitelistPaymentTokenChanged(uint256 newPercent);
+    event TariffChanged(uint256 service, uint256 tariffIndex);
+
+    function registerServiceTariff(Tariff calldata _newTariff) external returns(uint256);
     
     function authorizeAgentForService(
         address _agent,
-        uint256[] calldata _serviceTarifIndexes
+        uint256[] calldata _serviceTariffIndexes
     ) external returns (uint256[] memory);
 
     function buySubscription(
         address _service,
-        uint256 _tarifIndex,
+        uint256 _tariffIndex,
         uint256 _payWithIndex,
         address _buyFor,
         address _payer
     ) external returns(Ticket memory ticket);
 
-    function editServiceTarif(
-        uint256 _tarifIndex, 
+    function editServiceTariff(
+        uint256 _tariffIndex, 
         uint256 _timelockPeriod,
         uint256 _ticketValidPeriod,
         uint256 _counter,
@@ -30,15 +33,15 @@ interface ISubscriptionRegistry   {
         address _beneficiary
     ) external;
 
-    function addTarifPayOption(
-        uint256 _tarifIndex,
+    function addTariffPayOption(
+        uint256 _tariffIndex,
         address _paymentToken,
         uint256 _paymentAmount,
         uint16 _agentFeePercent
     ) external returns(uint256);
     
-    function editTarifPayOption(
-        uint256 _tarifIndex,
+    function editTariffPayOption(
+        uint256 _tariffIndex,
         uint256 _payWithIndex, 
         address _paymentToken,
         uint256 _paymentAmount,
@@ -65,11 +68,11 @@ interface ISubscriptionRegistry   {
 
     function getTicketPrice(
         address _service,
-        uint256 _tarifIndex,
+        uint256 _tariffIndex,
         uint256 _payWithIndex
     ) external view returns (address, uint256);
 
-    function getAvailableAgentsTarifForService(
+    function getAvailableAgentsTariffForService(
         address _agent, 
         address _service
     ) external view returns(Tariff[] memory); 

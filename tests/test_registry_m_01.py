@@ -13,7 +13,7 @@ def test_add_tariff(accounts, dai, sub_reg):
     payOptions = [(dai, PRICE, 200),]
     subscriptionType = (0,0,1,True, accounts[3])
     tarif = (subscriptionType, payOptions)
-    sub_reg.registerServiceTarif(tarif,{'from':accounts[1]})
+    sub_reg.registerServiceTariff(tarif,{'from':accounts[1]})
     actual_tarifs = sub_reg.getTariffsForService(accounts[1]);
     logging.info(
         'Service:({}),'

@@ -14,14 +14,14 @@ contract MinterServiceNoAgent is ERC721URIStorage, ServiceProvider, ServiceAgent
 			ERC721(name_, symbol_)
 	        ServiceProvider(_subscrRegistry) {}
 
-	    function registerServiceTarif(Tariff memory _newTarif) 
+	    function registerServiceTariff(Tariff memory _newTariff) 
 	        external onlyOwner returns(uint256)
 	    {
-	        return _registerServiceTarif(_newTarif);
+	        return _registerServiceTariff(_newTariff);
 	    }
 
-	    function editServiceTarif(
-	        uint256 _tarifIndex, 
+	    function editServiceTariff(
+	        uint256 _tariffIndex, 
 	        uint256 _timelockPeriod,
 	        uint256 _ticketValidPeriod,
 	        uint256 _counter,
@@ -30,8 +30,8 @@ contract MinterServiceNoAgent is ERC721URIStorage, ServiceProvider, ServiceAgent
 	    )  external onlyOwner 
 
 	    {
-	        _editServiceTarif(
-	            _tarifIndex, 
+	        _editServiceTariff(
+	            _tariffIndex, 
 	            _timelockPeriod,
 	            _ticketValidPeriod,
 	            _counter,
@@ -40,31 +40,31 @@ contract MinterServiceNoAgent is ERC721URIStorage, ServiceProvider, ServiceAgent
 	        );
 	    }
 
-	    function addTarifPayOption(
-	        uint256 _tarifIndex,
+	    function addTariffPayOption(
+	        uint256 _tariffIndex,
 	        address _paymentToken,
 	        uint256 _paymentAmount,
 	        uint16 _agentFeePercent
 	    ) external onlyOwner  returns(uint256)
 	    {
-	        return _addTarifPayOption(
-	            _tarifIndex,
+	        return _addTariffPayOption(
+	            _tariffIndex,
 	            _paymentToken,
 	            _paymentAmount,
 	            _agentFeePercent
 	        );
 	    }
 	    
-	    function editTarifPayOption(
-	        uint256 _tarifIndex,
+	    function editTariffPayOption(
+	        uint256 _tariffIndex,
 	        uint256 _payWithIndex, 
 	        address _paymentToken,
 	        uint256 _paymentAmount,
 	        uint16 _agentFeePercent
 	    ) external onlyOwner 
 	    {
-	        _editTarifPayOption(
-	            _tarifIndex,
+	        _editTariffPayOption(
+	            _tariffIndex,
 	            _payWithIndex, 
 	            _paymentToken,
 	            _paymentAmount,
@@ -74,13 +74,13 @@ contract MinterServiceNoAgent is ERC721URIStorage, ServiceProvider, ServiceAgent
 
 	    function authorizeAgentForService(
 	        address _agent,
-	        uint256[] memory _serviceTarifIndexes
+	        uint256[] memory _serviceTariffIndexes
 	    ) external onlyOwner returns (uint256[] memory)
 	    {
 	        // TODO Check agent
 	        return _authorizeAgentForService(
 	            _agent,
-	            _serviceTarifIndexes
+	            _serviceTariffIndexes
 	        );
 	    }
 

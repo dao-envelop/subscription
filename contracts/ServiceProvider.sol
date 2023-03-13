@@ -25,15 +25,15 @@ abstract contract ServiceProvider {
         subscriptionRegistry = ISubscriptionRegistry(_subscrRegistry);
 	}
 
-    function _registerServiceTarif(Tariff memory _newTarif) 
+    function _registerServiceTariff(Tariff memory _newTariff) 
         internal virtual returns(uint256)
     {
-        return subscriptionRegistry.registerServiceTarif(_newTarif);
+        return subscriptionRegistry.registerServiceTariff(_newTariff);
     }
 
     
-    function _editServiceTarif(
-        uint256 _tarifIndex, 
+    function _editServiceTariff(
+        uint256 _tariffIndex, 
         uint256 _timelockPeriod,
         uint256 _ticketValidPeriod,
         uint256 _counter,
@@ -41,8 +41,8 @@ abstract contract ServiceProvider {
         address _beneficiary
     ) internal virtual 
     {
-        subscriptionRegistry.editServiceTarif(
-            _tarifIndex, 
+        subscriptionRegistry.editServiceTariff(
+            _tariffIndex, 
             _timelockPeriod,
             _ticketValidPeriod,
             _counter,
@@ -51,31 +51,31 @@ abstract contract ServiceProvider {
         );
     }
 
-    function _addTarifPayOption(
-        uint256 _tarifIndex,
+    function _addTariffPayOption(
+        uint256 _tariffIndex,
         address _paymentToken,
         uint256 _paymentAmount,
         uint16 _agentFeePercent
     ) internal virtual returns(uint256)
     {
-        return subscriptionRegistry.addTarifPayOption(
-            _tarifIndex,
+        return subscriptionRegistry.addTariffPayOption(
+            _tariffIndex,
             _paymentToken,
             _paymentAmount,
             _agentFeePercent
         );
     }
     
-    function _editTarifPayOption(
-        uint256 _tarifIndex,
+    function _editTariffPayOption(
+        uint256 _tariffIndex,
         uint256 _payWithIndex, 
         address _paymentToken,
         uint256 _paymentAmount,
         uint16 _agentFeePercent
     ) internal virtual 
     {
-        subscriptionRegistry.editTarifPayOption(
-            _tarifIndex,
+        subscriptionRegistry.editTariffPayOption(
+            _tariffIndex,
             _payWithIndex, 
             _paymentToken,
             _paymentAmount,
@@ -85,13 +85,13 @@ abstract contract ServiceProvider {
 
     function _authorizeAgentForService(
         address _agent,
-        uint256[] memory _serviceTarifIndexes
+        uint256[] memory _serviceTariffIndexes
     ) internal virtual returns (uint256[] memory)
     {
         // TODO Check agent
         return subscriptionRegistry.authorizeAgentForService(
             _agent,
-            _serviceTarifIndexes
+            _serviceTariffIndexes
         );
     }
 
