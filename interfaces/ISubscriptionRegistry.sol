@@ -5,10 +5,6 @@ pragma solidity 0.8.16;
 import {SubscriptionType, PayOption, Tariff, Ticket} from "../contracts/SubscriptionRegistry.sol";
 interface ISubscriptionRegistry   {
 
-    event PlatfromFeeChanged(uint256 newPercent);
-    event WhitelistPaymentTokenChanged(uint256 newPercent);
-    event TariffChanged(uint256 service, uint256 tariffIndex);
-
     function registerServiceTariff(Tariff calldata _newTariff) external returns(uint256);
     
     function authorizeAgentForService(

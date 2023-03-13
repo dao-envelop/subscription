@@ -5,9 +5,10 @@ pragma solidity 0.8.16;
 import "@openzeppelin/contracts/access/Ownable.sol";
 import "@openzeppelin/contracts/token/ERC20/utils/SafeERC20.sol";
 import "@envelopv1/interfaces/ITrustedWrapper.sol";
-import "@envelopv1/interfaces/ISubscriptionManager.sol";
+//import "@envelopv1/interfaces/ISubscriptionManager.sol";
 import "@envelopv1/contracts/LibEnvelopTypes.sol";
 //import "./LibEnvelopTypes.sol";
+import "../interfaces/ISubscriptionRegistry.sol";
 
     struct SubscriptionType {
         uint256 timelockPeriod;    // in seconds e.g. 3600*24*30*12 = 31104000 = 1 year
@@ -58,7 +59,15 @@ contract SubscriptionRegistry is Ownable {
     // mapping from user addres to service contract address  to ticket
     mapping(address => mapping(address => Ticket)) public userTickets;
 
-    // TODO Events
+    event PlatfromFeeChanged(uint16 indexed newPercent);
+    event WhitelistPaymentTokenChanged(address indexed asset, bool indexed state);
+    event TariffChanged(address indexed service, uint256 indexed tariffIndex);
+    event TicketIssued(
+        address indexed service, 
+        address indexed agent, 
+        address indexed forUser, 
+        uint256 tariffIndex
+    );
 
     constructor(address _platformOwner) {
         require(_platformOwner != address(0),'Zero platform fee receiver');
@@ -195,7 +204,7 @@ contract SubscriptionRegistry is Ownable {
         // Lets receive payment tokens FROM sender
         _processPayment(_service, _tariffIndex, _payWithIndex, _payer);
         
-
+        emit TicketIssued(_service, msg.sender, _buyFor,_tariffIndex);
     }
 
     function checkAndFixUserSubscription(
@@ -332,6 +341,7 @@ contract SubscriptionRegistry is Ownable {
         external onlyOwner 
     {
         whiteListedForPayments[_asset] = _isEnable;
+        emit WhitelistPaymentTokenChanged(_asset, _isEnable);
     }
 
     function setMainWrapper(address _wrapper) external onlyOwner {
@@ -342,6 +352,12 @@ contract SubscriptionRegistry is Ownable {
         require(msg.sender == platformOwner, 'Only platform owner');
         require(_newOwner != address(0),'Zero platform fee receiver');
         platformOwner = _newOwner;
+    }
+
+    function setPlatformFeePercent(uint16 _newPercent) external {
+        require(msg.sender == platformOwner, 'Only platform owner');
+        platformFeePercent = _newPercent;
+        emit PlatfromFeeChanged(platformFeePercent);
     }
 
     
@@ -526,6 +542,7 @@ contract SubscriptionRegistry is Ownable {
             'Tariff has no valid ticket option'  
         );
         availableTariffs[_service].push(_newTariff);
+        emit TariffChanged(_service, availableTariffs[_service].length - 1);
         return availableTariffs[_service].length - 1;
     }
 
@@ -545,6 +562,7 @@ contract SubscriptionRegistry is Ownable {
         availableTariffs[_service][_tariffIndex].subscription.counter = _counter;
         availableTariffs[_service][_tariffIndex].subscription.isAvailable = _isAvailable;    
         availableTariffs[_service][_tariffIndex].subscription.beneficiary = _beneficiary;    
+        emit TariffChanged(_service, _tariffIndex);
     }
    
     function _addTariffPayOption(
@@ -559,6 +577,7 @@ contract SubscriptionRegistry is Ownable {
         availableTariffs[_service][_tariffIndex].payWith.push(
             PayOption(_paymentToken, _paymentAmount, _agentFeePercent)
         ); 
+        emit TariffChanged(_service, _tariffIndex);
         return availableTariffs[_service][_tariffIndex].payWith.length - 1;
     }
 
@@ -573,7 +592,8 @@ contract SubscriptionRegistry is Ownable {
     {
         require(whiteListedForPayments[_paymentToken], 'Not whitelisted for payments');
         availableTariffs[_service][_tariffIndex].payWith[_payWithIndex] 
-        = PayOption(_paymentToken, _paymentAmount, _agentFeePercent);    
+        = PayOption(_paymentToken, _paymentAmount, _agentFeePercent);  
+        emit TariffChanged(_service, _tariffIndex);  
     }
 
         
