@@ -46,6 +46,7 @@ contract SubscriptionRegistry is Ownable {
 
     address  public mainWrapper;
     address  public previousRegistry;
+    address  public proxyRegistry;
 
     mapping(address => bool) public whiteListedForPayments;
     
@@ -211,42 +212,47 @@ contract SubscriptionRegistry is Ownable {
         address _user
     ) external returns (bool ok){
         
-        //address _service = msg.sender;
+        address _service = msg.sender;
         // Check user ticket
         (bool isValid, bool needFix) = _isTicketValid(_user, msg.sender);
         
         // Proxy to previos
-        // if (!isValid && previousRegistry != address(0)) {
-        //     isValid = ISubscriptionManager(previousManager).checkUserSubscription(
-        //         _user, 
-        //         _service
-        //     );
-        //     // Case when valid ticket stored in previousManager
-        //     if (isValid) {
-        //         ISubscriptionManager(previousManager).fixUserSubscription(
-        //             _user, 
-        //             _service
-        //         );
-        //         ok = true;
-        //         return ok;
-        //     }
-        // }
+        if (!isValid && previousRegistry != address(0)) {
+            isValid = ISubscriptionRegistry(previousRegistry).checkUserSubscription(
+                _user, 
+                _service
+            );
+            // Case when valid ticket stored in previousManager
+            if (isValid) {
+                ISubscriptionRegistry(previousRegistry).fixUserSubscription(
+                    _user, 
+                    _service
+                );
+                ok = true;
+                return ok;
+            }
+        }
         require(isValid,'Valid ticket not found');
         
         // Fix action (for subscription with counter)
         if (needFix){
-            fixUserSubscription(_user);    
+            fixUserSubscription(_user, msg.sender);    
         }
                 
         ok = true;
     }
 
     function fixUserSubscription(
-        address _user
+        address _user,
+        address _serviceFromProxy
     ) public {
+        address service = msg.sender;
+        if (proxyRegistry !=address(0) && msg.sender == proxyRegistry){
+            service = _serviceFromProxy;
+        }
         // Fix action (for subscription with counter)
-        if (userTickets[_user][msg.sender].countsLeft > 0) {
-            -- userTickets[_user][msg.sender].countsLeft; 
+        if (userTickets[_user][service].countsLeft > 0) {
+            -- userTickets[_user][service].countsLeft; 
         }
     }
 
@@ -257,12 +263,12 @@ contract SubscriptionRegistry is Ownable {
         address _service
     ) external view returns (bool ok) {
         (ok,)  = _isTicketValid(_user, _service);
-        // if (!ok && previousManager != address(0)) {
-        //     ok = ISubscriptionManager(previousManager).checkUserSubscription(
-        //         _user, 
-        //         _serviceCode
-        //     );
-        // }
+        if (!ok && previousRegistry != address(0)) {
+            ok = ISubscriptionRegistry(previousRegistry).checkUserSubscription(
+                _user, 
+                _service
+            );
+        }
     }
 
     function getUserTicketForService(
@@ -364,6 +370,10 @@ contract SubscriptionRegistry is Ownable {
 
     function setPreviousRegistry(address _registry) external onlyOwner {
         previousRegistry = _registry;
+    }
+
+    function setProxyRegistry(address _registry) external onlyOwner {
+        proxyRegistry = _registry;
     }
     /////////////////////////////////////////////////////////////////////
     

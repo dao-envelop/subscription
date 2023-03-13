@@ -52,7 +52,7 @@ interface ISubscriptionRegistry   {
 
     function checkAndFixUserSubscription(address _user) external returns (bool ok);
 
-    function fixUserSubscription(address _user) external;
+    function fixUserSubscription(address _user, address _serviceFromProxy) external;
 
 
     function getUserTicketForService(
