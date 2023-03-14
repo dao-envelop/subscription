@@ -128,6 +128,6 @@ def test_add_tariff(accounts, dai, weth, sub_reg):
 
     #change PlatformFeePercent
     with reverts("Only platform owner"):
-        sub_reg.setPlatformOwner(40, {"from": accounts[0]})    
-    sub_reg.setPlatformOwner(40, {"from": accounts[1]})
+        sub_reg.setPlatformFeePercent(40, {"from": accounts[0]})    
+    sub_reg.setPlatformFeePercent(40, {"from": accounts[1]})
 
