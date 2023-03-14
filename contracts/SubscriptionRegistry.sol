@@ -473,7 +473,8 @@ contract SubscriptionRegistry is Ownable {
                     _payer, 
                     msg.sender,
                     availableTariffs[_service][_tariffIndex].payWith[_payWithIndex].paymentAmount
-                    *100/availableTariffs[_service][_tariffIndex].payWith[_payWithIndex].agentFeePercent
+                     *availableTariffs[_service][_tariffIndex].payWith[_payWithIndex].agentFeePercent
+                     /PERCENT_DENOMINATOR
                 );
 
                 // 2.3. Platform fee 
@@ -485,7 +486,8 @@ contract SubscriptionRegistry is Ownable {
                         _payer, 
                         platformOwner, //
                         availableTariffs[_service][_tariffIndex].payWith[_payWithIndex].paymentAmount
-                        *100/_pFee
+                          *_pFee
+                          /PERCENT_DENOMINATOR
                     );
                 }
 
@@ -503,7 +505,8 @@ contract SubscriptionRegistry is Ownable {
                 sendValue(
                     payable(availableTariffs[_service][_tariffIndex].subscription.beneficiary),
                     availableTariffs[_service][_tariffIndex].payWith[_payWithIndex].paymentAmount
-                    *100/availableTariffs[_service][_tariffIndex].payWith[_payWithIndex].agentFeePercent
+                      *availableTariffs[_service][_tariffIndex].payWith[_payWithIndex].agentFeePercent
+                      /PERCENT_DENOMINATOR
                 );
 
                 // 2.3. Platform fee 
@@ -513,7 +516,8 @@ contract SubscriptionRegistry is Ownable {
                     sendValue(
                         payable(platformOwner),
                         availableTariffs[_service][_tariffIndex].payWith[_payWithIndex].paymentAmount
-                        *100/_pFee
+                          *_pFee
+                          /PERCENT_DENOMINATOR
                     );
                 }
                 // return change

@@ -58,6 +58,17 @@ def test_buy_subscription(accounts, dai, weth, sub_reg, minter1):
 	pay_amount = payOptions[1][1]*(sub_reg.PERCENT_DENOMINATOR()+sub_reg.platformFeePercent())/sub_reg.PERCENT_DENOMINATOR()
 	weth.transfer(accounts[1], pay_amount, {"from": accounts[0]})
 	weth.approve(sub_reg.address, pay_amount, {"from": accounts[1]})
+	logging.info(
+        '\nCalculated pay_amount:{}, '
+        '\n  agent fee = {}'
+        '\n  platform fee = {}'
+        '\n-------------------'
+        '\npay Amount from contract: {}'.format(
+            pay_amount,
+            payOptions[1][1]* payOptions[1][2]/sub_reg.PERCENT_DENOMINATOR(),
+            payOptions[1][1]*sub_reg.platformFeePercent()/sub_reg.PERCENT_DENOMINATOR(),
+            Wei(sub_reg.getTicketPrice(minter1.address, 0, 1)[1]).to('ether')
+    ))         
 
 	minter1.buySubscription(minter1.address, 0, 1, accounts[1], accounts[1], {"from": accounts[1]})
 	ticket = sub_reg.getUserTicketForService(minter1.address, accounts[1])
