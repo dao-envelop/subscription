@@ -60,6 +60,11 @@ def test_buy_subscription(accounts, dai, weth, sub_reg, minter1):
 	weth.approve(sub_reg.address, pay_amount, {"from": accounts[1]})
 
 	minter1.buySubscription(minter1.address, 0, 1, accounts[1], accounts[1], {"from": accounts[1]})
+	ticket = sub_reg.getUserTicketForService(minter1.address, accounts[1])
+	assert ticket[0] == subscriptionType[1]
+	assert ticket[1] == subscriptionType[2]
+
+	minter1.mint(1, {"from": accounts[1]})
         
 	'''function buySubscription(
         address _service,
