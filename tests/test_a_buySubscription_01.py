@@ -55,7 +55,7 @@ def test_buy_subscription(accounts, dai, weth, sub_reg, minter1):
 	with reverts("ERC20: insufficient allowance"):
 		minter1.buySubscription(minter1.address, 0, 1, accounts[1], accounts[2], {"from": accounts[1]})
 
-	pay_amount = 1e18 #payOptions[1][1]*(sub_reg.PERCENT_DENOMINATOR()+sub_reg.platformFeePercent())/sub_reg.PERCENT_DENOMINATOR()
+	pay_amount = payOptions[1][1]*(sub_reg.PERCENT_DENOMINATOR()+sub_reg.platformFeePercent())/sub_reg.PERCENT_DENOMINATOR()
 	weth.transfer(accounts[1], pay_amount, {"from": accounts[0]})
 	weth.approve(sub_reg.address, pay_amount, {"from": accounts[1]})
 
@@ -66,7 +66,21 @@ def test_buy_subscription(accounts, dai, weth, sub_reg, minter1):
         uint256 _tarifIndex,
         uint256 _payWithIndex,
         address _buyFor,
-        address _payer'''
+        address _payer
+
+
+        struct SubscriptionType {
+        uint256 timelockPeriod;    // in seconds e.g. 3600*24*30*12 = 31104000 = 1 year
+        uint256 ticketValidPeriod; // in seconds e.g. 3600*24*30    =  2592000 = 1 month
+        uint256 counter;
+        bool isAvailable;
+        address beneficiary;
+    }
+    struct PayOption {
+        address paymentToken;
+        uint256 paymentAmount;
+        uint16 agentFeePercent; // 100%-10000, 20%-2000, 3%-300 
+    }'''
 
 
 
