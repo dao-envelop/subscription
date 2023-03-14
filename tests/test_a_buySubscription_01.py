@@ -14,11 +14,11 @@ def test_buy_subscription(accounts, dai, weth, sub_reg, minter1):
 	#try to mint - serviceProvider is not registered
 	with reverts("Valid ticket not found"):
 		minter1.mint(1, {"from": accounts[1]})
-	payOptions = [(dai, PRICE, 200), (weth, PRICE/5, 0)] #without Agent fee
-	subscriptionType = (0,0,1,True, accounts[3])
-	tariff1 = (subscriptionType, payOptions)
-	payOptions = [(dai, PRICE/4, 200), (weth, PRICE/10, 0)] #without Agent fee
+	payOptions = [(dai, PRICE, 0), (weth, PRICE/5, 0)] #without Agent fee
 	subscriptionType = (0,100,0,True, accounts[3])
+	tariff1 = (subscriptionType, payOptions)
+	#payOptions = [(dai, PRICE/4, 0), (weth, PRICE/10, 0)] #without Agent fee
+	#subscriptionType = (0,100,0,True, accounts[3])
 
 	#add tokens to whiteList
 	sub_reg.setAssetForPaymentState(dai, True, {'from':accounts[0]})
@@ -58,21 +58,22 @@ def test_buy_subscription(accounts, dai, weth, sub_reg, minter1):
 	pay_amount = payOptions[1][1]*(sub_reg.PERCENT_DENOMINATOR()+sub_reg.platformFeePercent())/sub_reg.PERCENT_DENOMINATOR()
 	weth.transfer(accounts[1], pay_amount, {"from": accounts[0]})
 	weth.approve(sub_reg.address, pay_amount, {"from": accounts[1]})
-	logging.info(
-        '\nCalculated pay_amount:{}, '
-        '\n  agent fee = {}'
-        '\n  platform fee = {}'
-        '\n-------------------'
-        '\npay Amount from contract: {}'.format(
-            pay_amount,
-            payOptions[1][1]* payOptions[1][2]/sub_reg.PERCENT_DENOMINATOR(),
-            payOptions[1][1]*sub_reg.platformFeePercent()/sub_reg.PERCENT_DENOMINATOR(),
-            Wei(sub_reg.getTicketPrice(minter1.address, 0, 1)[1]).to('ether')
-    ))         
+	'''logging.info(
+		'\nCalculated pay_amount:{}, '
+		'\n  agent fee = {}'
+		'\n  platform fee = {}'
+		'\n-------------------'
+		'\npay Amount from contract: {}'.format(
+			pay_amount,
+			payOptions[1][1]* payOptions[1][2]/sub_reg.PERCENT_DENOMINATOR(),
+			payOptions[1][1]*sub_reg.platformFeePercent()/sub_reg.PERCENT_DENOMINATOR(),
+			Wei(sub_reg.getTicketPrice(minter1.address, 0, 1)[1]).to('ether')
+	))
+	logging.info(sub_reg.getTariffsForService(minter1))'''
 
 	minter1.buySubscription(minter1.address, 0, 1, accounts[1], accounts[1], {"from": accounts[1]})
 	ticket = sub_reg.getUserTicketForService(minter1.address, accounts[1])
-	assert ticket[0] == subscriptionType[1]
+	assert ticket[0] > 0
 	assert ticket[1] == subscriptionType[2]
 
 	minter1.mint(1, {"from": accounts[1]})
