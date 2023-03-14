@@ -47,7 +47,7 @@ interface ISubscriptionRegistry   {
     function checkUserSubscription(
         address _user, 
         address _service
-    ) external view returns (bool ok);
+    ) external view returns (bool ok, bool needFix);
 
 
     function checkAndFixUserSubscription(address _user) external returns (bool ok);
