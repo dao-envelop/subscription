@@ -113,16 +113,16 @@ abstract contract ServiceProvider {
     ) internal {
             subscriptionRegistry.fixUserSubscription(
                 _user,
-                msg.sender
+                address(this)
             );
     }
 
     function _checkUserSubscription(address _user) 
         internal 
         view 
-        returns (bool ok)
+        returns (bool ok, bool needFix)
     {
-            ok = subscriptionRegistry.checkUserSubscription(
+            (ok, needFix) = subscriptionRegistry.checkUserSubscription(
                 _user,
                 address(this)  
             );

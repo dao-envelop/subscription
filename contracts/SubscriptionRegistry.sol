@@ -218,16 +218,18 @@ contract SubscriptionRegistry is Ownable {
         
         // Proxy to previos
         if (!isValid && previousRegistry != address(0)) {
-            isValid = ISubscriptionRegistry(previousRegistry).checkUserSubscription(
+            (isValid, needFix) = ISubscriptionRegistry(previousRegistry).checkUserSubscription(
                 _user, 
                 _service
             );
             // Case when valid ticket stored in previousManager
-            if (isValid) {
-                ISubscriptionRegistry(previousRegistry).fixUserSubscription(
-                    _user, 
-                    _service
-                );
+            if (isValid ) {
+                if (needFix){
+                    ISubscriptionRegistry(previousRegistry).fixUserSubscription(
+                        _user, 
+                        _service
+                    );
+                }
                 ok = true;
                 return ok;
             }
@@ -261,10 +263,10 @@ contract SubscriptionRegistry is Ownable {
     function checkUserSubscription(
         address _user, 
         address _service
-    ) external view returns (bool ok) {
-        (ok,)  = _isTicketValid(_user, _service);
+    ) external view returns (bool ok, bool needFix) {
+        (ok, needFix)  = _isTicketValid(_user, _service);
         if (!ok && previousRegistry != address(0)) {
-            ok = ISubscriptionRegistry(previousRegistry).checkUserSubscription(
+            (ok, needFix) = ISubscriptionRegistry(previousRegistry).checkUserSubscription(
                 _user, 
                 _service
             );
