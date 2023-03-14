@@ -113,7 +113,7 @@ abstract contract ServiceProvider {
     ) internal {
             subscriptionRegistry.fixUserSubscription(
                 _user,
-                msg.sender
+                address(this)
             );
     }
 
