@@ -8,7 +8,7 @@ from web3 import Web3
 PRICE = 1e18
 zero_address = '0x0000000000000000000000000000000000000000'
 
-#service provider is selfAgent
+#service provider is selfAgent. Buy ticket and call serviceProvider method
 def test_buy_subscription(accounts, dai, weth, sub_reg, minter1):
 
 	#try to mint - serviceProvider is not registered
