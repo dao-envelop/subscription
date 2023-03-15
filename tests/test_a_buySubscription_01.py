@@ -8,7 +8,7 @@ from web3 import Web3
 PRICE = 1e18
 zero_address = '0x0000000000000000000000000000000000000000'
 
-#service provider is selfAgent. Buy ticket and call serviceProvider method
+#service provider is selfAgent. Buy ticket for erc20 tokens and call serviceProvider method. Without Agent
 def test_buy_subscription(accounts, dai, weth, sub_reg, minter1):
 
 	#try to mint - serviceProvider is not registered
@@ -58,51 +58,16 @@ def test_buy_subscription(accounts, dai, weth, sub_reg, minter1):
 	pay_amount = payOptions[1][1]*(sub_reg.PERCENT_DENOMINATOR()+sub_reg.platformFeePercent())/sub_reg.PERCENT_DENOMINATOR()
 	weth.transfer(accounts[1], pay_amount, {"from": accounts[0]})
 	weth.approve(sub_reg.address, pay_amount, {"from": accounts[1]})
-	'''logging.info(
-		'\nCalculated pay_amount:{}, '
-		'\n  agent fee = {}'
-		'\n  platform fee = {}'
-		'\n-------------------'
-		'\npay Amount from contract: {}'.format(
-			pay_amount,
-			payOptions[1][1]* payOptions[1][2]/sub_reg.PERCENT_DENOMINATOR(),
-			payOptions[1][1]*sub_reg.platformFeePercent()/sub_reg.PERCENT_DENOMINATOR(),
-			Wei(sub_reg.getTicketPrice(minter1.address, 0, 1)[1]).to('ether')
-	))
-	logging.info(sub_reg.getTariffsForService(minter1))'''
 
-	minter1.buySubscription(minter1.address, 0, 1, accounts[1], accounts[1], {"from": accounts[1]})
+	minter1.buySubscription(minter1.address, 0, 1, accounts[1], accounts[1], {"from": accounts[1], "value": 1})
 	ticket = sub_reg.getUserTicketForService(minter1.address, accounts[1])
 	assert ticket[0] > 0
 	assert ticket[1] == subscriptionType[2]
 
 	minter1.mint(1, {"from": accounts[1]})
-        
-	'''function buySubscription(
-        address _service,
-        uint256 _tarifIndex,
-        uint256 _payWithIndex,
-        address _buyFor,
-        address _payer
 
-
-        struct SubscriptionType {
-        uint256 timelockPeriod;    // in seconds e.g. 3600*24*30*12 = 31104000 = 1 year
-        uint256 ticketValidPeriod; // in seconds e.g. 3600*24*30    =  2592000 = 1 month
-        uint256 counter;
-        bool isAvailable;
-        address beneficiary;
-    }
-    struct PayOption {
-        address paymentToken;
-        uint256 paymentAmount;
-        uint16 agentFeePercent; // 100%-10000, 20%-2000, 3%-300 
-    }'''
-
-
-
-
-
+	assert minter1.ownerOf(1) == accounts[1]
+  
 
 
 
