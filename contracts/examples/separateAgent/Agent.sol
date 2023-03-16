@@ -9,7 +9,7 @@ contract Agent is ServiceAgent {
     
     event TicketSold(address indexed buyer, address indexed service, Ticket ticket);
     
-    function buyTicket(address _service) external {
+    function buyTicket(address _service) external payable {
         Ticket memory t;
         t = buySubscription(
             _service,

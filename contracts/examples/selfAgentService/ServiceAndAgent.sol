@@ -45,7 +45,7 @@ contract ServiceAndAgent is ServiceProvider, ServiceAgent, Ownable {
         return _authorizeAgentForService(address(this), idxs);
     }
 
-    function buyTicket() external {
+    function buyTicket() external payable{
         Ticket memory t;
         t = buySubscription(
             address(this),

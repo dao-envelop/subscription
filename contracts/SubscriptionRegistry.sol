@@ -5,9 +5,7 @@ pragma solidity 0.8.16;
 import "@openzeppelin/contracts/access/Ownable.sol";
 import "@openzeppelin/contracts/token/ERC20/utils/SafeERC20.sol";
 import "@envelopv1/interfaces/ITrustedWrapper.sol";
-//import "@envelopv1/interfaces/ISubscriptionManager.sol";
 import "@envelopv1/contracts/LibEnvelopTypes.sol";
-//import "./LibEnvelopTypes.sol";
 import "../interfaces/ISubscriptionRegistry.sol";
 
     struct SubscriptionType {
@@ -147,9 +145,6 @@ contract SubscriptionRegistry is Ownable {
     // Only service contract must call this function
     function authorizeAgentForService(
         address _agent,
-        // uint256 _platformTariffIndex,
-        // uint256 _payWithIndex,
-        // address _payer,
         uint256[] calldata _serviceTariffIndexes
     ) external virtual returns (uint256[] memory) 
     {
@@ -173,6 +168,7 @@ contract SubscriptionRegistry is Ownable {
         address _buyFor,
         address _payer
     ) external 
+      payable
       returns(Ticket memory ticket) {
         // Cant buy ticket for nobody
         require(_buyFor != address(0),'Cant buy ticket for nobody');

@@ -27,7 +27,7 @@ abstract contract ServiceAgent{
         uint256 _payWithIndex,
         address _buyFor,
         address _payer
-    ) public returns(Ticket memory ticket)
+    ) public payable returns(Ticket memory ticket)
     {
         // get service provider
         IServiceProvider sP = IServiceProvider(_service);
@@ -35,7 +35,7 @@ abstract contract ServiceAgent{
         // call SubscriptionRegistry that registered on current
         // service provider
         //return ISubscriptionRegistry(sP.subscriptionRegistry).buySubscription(
-        return sP.subscriptionRegistry().buySubscription(
+        return sP.subscriptionRegistry().buySubscription{value: msg.value}(
             _service,
             _tarifIndex,
             _payWithIndex,
