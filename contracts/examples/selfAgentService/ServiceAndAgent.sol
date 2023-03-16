@@ -17,11 +17,16 @@ contract ServiceAndAgent is ServiceProvider, ServiceAgent, Ownable {
         ServiceProvider(_subscrRegistry)
     {
         
-        PayOption[] memory poArray = new PayOption[](1);
+        PayOption[] memory poArray = new PayOption[](2);
         poArray[0] = PayOption(
                 _defaultPayToken, // paymentToken
                 1e18, // paymentAmount
                 1000  // agentFeePercent
+        );
+        poArray[1] = PayOption(
+                address(0), // paymentToken
+                2e17, // paymentAmount
+                2000  // agentFeePercent
         );
 
         Tariff memory defaultTariff = Tariff(
@@ -45,7 +50,7 @@ contract ServiceAndAgent is ServiceProvider, ServiceAgent, Ownable {
         return _authorizeAgentForService(address(this), idxs);
     }
 
-    function buyTicket() external payable{
+    function buyTicket() external returns(Ticket memory){
         Ticket memory t;
         t = buySubscription(
             address(this),
@@ -57,6 +62,22 @@ contract ServiceAndAgent is ServiceProvider, ServiceAgent, Ownable {
         
         // put additional code below
         emit TicketSold(msg.sender, address(this), t);
+        return t;
+    }
+
+    function buyTicketWithEther() external payable returns(Ticket memory){
+        Ticket memory t;
+        t = buySubscription(
+            address(this),
+            0, //  _tarifIndex,
+            1, // _payWithIndex,
+            msg.sender, // _buyFor,
+            msg.sender  // _payer
+        );
+        
+        // put additional code below
+        emit TicketSold(msg.sender, address(this), t);
+        return t;
     }
 
     function getService(uint256 param) external {

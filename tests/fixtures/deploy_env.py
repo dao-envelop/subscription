@@ -1,6 +1,6 @@
 import pytest
 #from brownie import chain
-
+zero_address = '0x0000000000000000000000000000000000000000'
 ############ Mocks ########################
 @pytest.fixture(scope="module")
 def dai(accounts, TokenMock):
@@ -31,6 +31,7 @@ def singleAgent(accounts, Agent):
 @pytest.fixture(scope="module")
 def serviceAndAgent(accounts, ServiceAndAgent, dai, weth, sub_reg):
     sub_reg.setAssetForPaymentState(dai.address, True, {'from':accounts[0]})
+    sub_reg.setAssetForPaymentState(zero_address, True, {'from':accounts[0]})
     #sub_reg.setAssetForPaymentState(weth.address, True, {'from':accounts[0]})
     s = accounts[0].deploy(ServiceAndAgent,sub_reg, dai)
     yield s

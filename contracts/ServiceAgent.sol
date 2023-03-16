@@ -35,7 +35,7 @@ abstract contract ServiceAgent{
         // call SubscriptionRegistry that registered on current
         // service provider
         //return ISubscriptionRegistry(sP.subscriptionRegistry).buySubscription(
-        return sP.subscriptionRegistry().buySubscription{value: msg.value}(
+        ticket = sP.subscriptionRegistry().buySubscription{value: msg.value}(
             _service,
             _tarifIndex,
             _payWithIndex,

@@ -18,7 +18,7 @@ interface ISubscriptionRegistry   {
         uint256 _payWithIndex,
         address _buyFor,
         address _payer
-    ) external returns(Ticket memory ticket);
+    ) external payable returns(Ticket memory ticket);
 
     function editServiceTariff(
         uint256 _tariffIndex, 
