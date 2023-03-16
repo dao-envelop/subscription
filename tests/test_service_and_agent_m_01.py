@@ -40,7 +40,8 @@ def test_buy_ticket(accounts, dai, weth, sub_reg, serviceAndAgent):
             serviceAndAgent,
             ticket.return_value,
             user_tickets
-    ))         
+    ))
+    assert user_tickets == ticket.return_value         
 
 def test_get_service(accounts, dai, weth, sub_reg, serviceAndAgent):
     tx = serviceAndAgent.getService(99,{'from':accounts[1]})
@@ -51,11 +52,12 @@ def test_buy_ticket_ether(accounts, dai, weth, sub_reg, serviceAndAgent):
     actual_tarifs = sub_reg.getAvailableAgentsTariffForService(serviceAndAgent, serviceAndAgent)
     logging.info('Ticket price:{}'.format(sub_reg.getTicketPrice(serviceAndAgent,0,1)))
     ticket = serviceAndAgent.buyTicketWithEther({'value': 1e18, 'from':accounts[1]})
-    user_tickets = sub_reg.getUserTicketForService(serviceAndAgent, serviceAndAgent)
+    user_tickets = sub_reg.getUserTicketForService(serviceAndAgent, accounts[1])
     logging.info(
         'Service:({}, agent {}),'
         '\nticket = {}'.format(
             serviceAndAgent,
             serviceAndAgent,
             ticket.return_value
-    ))             
+    ))  
+    assert user_tickets == ticket.return_value           
