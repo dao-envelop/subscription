@@ -41,3 +41,29 @@ def minter1(accounts, MinterServiceNoAgent, sub_reg):
     s = accounts[0].deploy(MinterServiceNoAgent,sub_reg, "Minter without Agent", 'MWA')
     yield s
 
+@pytest.fixture(scope="module")
+def wrapper(accounts, pm):
+    wa = pm('envelopv1').WrapperLightV1
+    w = accounts[0].deploy(wa)
+    yield w
+
+
+@pytest.fixture(scope="module")
+def techERC20(accounts, pm):
+    wa = pm('envelopv1').TechTokenV1
+    tech = accounts[0].deploy(wa)
+    yield tech
+
+
+@pytest.fixture(scope="module")
+def wrapperTrustedV1(accounts, techERC20, pm, sub_reg):
+    wa = pm('envelopv1').TrustedWrapper
+    t = accounts[0].deploy(wa, techERC20.address, sub_reg.address)
+    yield t 
+
+@pytest.fixture(scope="module")
+def wnft721(accounts, pm):
+    wa = pm('envelopv1').EnvelopwNFT721
+    wnft = accounts[0].deploy(wa,"Envelop wNFT", "eNFT", "https://api.envelop.is/metadata/" )
+    yield wnft
+
