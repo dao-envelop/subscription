@@ -8,14 +8,12 @@ from web3 import Web3
 PRICE = 1e18
 zero_address = '0x0000000000000000000000000000000000000000'
 
-#service provider is selfAgent. Buy ticket for ether and call serviceProvider method. Without Agent
+#service provider is selfAgent. Buy ticket for ether and call serviceProvider method. Without Agent. Ticket is with expiring time
 def test_buy_subscription(accounts, dai, weth, sub_reg, minter1):
 
 	payOptions = [(dai, PRICE, 0), (zero_address, PRICE/5, 0)] #without Agent fee
 	subscriptionType = (0,100,0,True, accounts[3])
 	tariff1 = (subscriptionType, payOptions)
-	#payOptions = [(dai, PRICE/4, 0), (weth, PRICE/10, 0)] #without Agent fee
-	#subscriptionType = (0,100,0,True, accounts[3])
 
 	#add tokens to whiteList
 	sub_reg.setAssetForPaymentState(dai, True, {'from':accounts[0]})

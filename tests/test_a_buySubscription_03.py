@@ -8,7 +8,7 @@ from web3 import Web3
 PRICE = 1e18
 zero_address = '0x0000000000000000000000000000000000000000'
 
-#service provider is selfAgent. Buy ticket by wrapping erc20 tokens and call serviceProvider method. Without Agent
+#service provider is selfAgent. Buy ticket by wrapping erc20 tokens and call serviceProvider method. Without Agent. Ticket is with expiring time
 def test_buy_subscription(accounts, dai, weth, sub_reg, minter1, wrapperTrustedV1, wnft721):
 
 	#set wrapper
@@ -36,7 +36,7 @@ def test_buy_subscription(accounts, dai, weth, sub_reg, minter1, wrapperTrustedV
 	pay_amount = payOptions[1][1]
 
 	#pay for ether  - #more than necessary
-	with reverts(""):
+	with reverts("Ether Not accepted in this method"):
 		minter1.buySubscription(minter1.address, 0, 1, accounts[1], accounts[1], {"from": accounts[1], "value": pay_amount})
 
 	with reverts("ERC20: insufficient allowance"):
@@ -50,8 +50,9 @@ def test_buy_subscription(accounts, dai, weth, sub_reg, minter1, wrapperTrustedV
 
 	before_acc1 = weth.balanceOf(accounts[1])
 	before_w = weth.balanceOf(wrapperTrustedV1.address)
-	
-	minter1.buySubscription(minter1.address, 0, 1, accounts[1], accounts[1], {"from": accounts[1]})
+
+	tx = minter1.buySubscription(minter1.address, 0, 1, accounts[1], accounts[1], {"from": accounts[1]})
+	wTokenId = tx.events['WrappedV1']['outTokenId']
 
 
 	ticket = sub_reg.getUserTicketForService(minter1.address, accounts[1])
@@ -65,6 +66,29 @@ def test_buy_subscription(accounts, dai, weth, sub_reg, minter1, wrapperTrustedV
 	minter1.mint(1, {"from": accounts[1]})
 
 	assert minter1.ownerOf(1) == accounts[1]
+	assert wnft721.balanceOf(accounts[1]) == 1 #check wnft
+
+	#check wnft
+	assert wnft721.wnftInfo(wTokenId)[0] == ((0, zero_address), 0, 0) 
+	assert wnft721.wnftInfo(wTokenId)[1][0] == ((2, weth.address), 0, int(pay_amount))
+	assert wnft721.wnftInfo(wTokenId)[2] == zero_address
+	assert wnft721.wnftInfo(wTokenId)[3] == []
+	assert wnft721.wnftInfo(wTokenId)[4][0][1] > chain.time() 
+	assert wnft721.wnftInfo(wTokenId)[5] == []
+	assert wnft721.wnftInfo(wTokenId)[6] == '0x0000'
+
+	#check event
+	assert tx.events['TicketIssued']['service'] == minter1.address
+	assert tx.events['TicketIssued']['agent'] == minter1.address
+	assert tx.events['TicketIssued']['forUser'] == accounts[1]
+	assert tx.events['TicketIssued']['tariffIndex'] == 0
+
+	chain.sleep(120)
+	chain.mine()
+
+	#ticket expired
+	with reverts("Valid ticket not found"):
+		minter1.mint(1, {"from": accounts[1]})
   
 
 
