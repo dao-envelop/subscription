@@ -477,7 +477,6 @@ contract SubscriptionRegistry is Ownable {
             }
         }
         return result;
-
     }    
     ////////////////////////////////////////////////////////////////
     //////////     Admins                                     //////
