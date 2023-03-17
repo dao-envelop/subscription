@@ -52,12 +52,12 @@ abstract contract ServiceAgent{
 
     }
 
-    function withdrawEther(address _feeReceiver) internal  {
+    function _withdrawEther(address _feeReceiver) internal  {
         address payable o = payable(_feeReceiver);
         o.transfer(address(this).balance);
     }
 
-    function withdrawTokens(address _erc20, address _feeReceiver) internal  {
+    function _withdrawTokens(address _erc20, address _feeReceiver) internal  {
         IERC20(_erc20).safeTransfer(_feeReceiver, IERC20(_erc20).balanceOf(address(this)));
     }
 }
