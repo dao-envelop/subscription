@@ -45,5 +45,5 @@ def test_buy_subscription(accounts, dai, weth, sub_reg, minter1, wrapperTrustedV
 	minter1.mint(1, {"from": accounts[1]})
 	#counts ran out
 	with reverts("Valid ticket not found"):
-		minter1.mint(1, {"from": accounts[1]})
+		minter1.mint(2, {"from": accounts[1]})
 	
