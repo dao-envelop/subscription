@@ -193,15 +193,20 @@ contract SubscriptionRegistry is Ownable {
         require(!isValid, 'Only one valid ticket at time');
 
         //lets safe user ticket (only one ticket available in this version)
-        userTickets[_buyFor][_service] = Ticket(
+        ticket = Ticket(
             availableTariffs[_service][_tariffIndex].subscription.ticketValidPeriod + block.timestamp,
             availableTariffs[_service][_tariffIndex].subscription.counter
         );
+        userTickets[_buyFor][_service] = ticket;
+        // Ticket(
+        //     availableTariffs[_service][_tariffIndex].subscription.ticketValidPeriod + block.timestamp,
+        //     availableTariffs[_service][_tariffIndex].subscription.counter
+        // );
 
         // Lets receive payment tokens FROM sender
         _processPayment(_service, _tariffIndex, _payWithIndex, _payer);
         
-        emit TicketIssued(_service, msg.sender, _buyFor,_tariffIndex);
+        emit TicketIssued(_service, msg.sender, _buyFor, _tariffIndex);
     }
 
     function checkAndFixUserSubscription(
