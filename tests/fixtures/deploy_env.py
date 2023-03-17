@@ -38,7 +38,17 @@ def serviceAndAgent(accounts, ServiceAndAgent, dai, weth, sub_reg):
 
 @pytest.fixture(scope="module")
 def minter1(accounts, MinterServiceNoAgent, sub_reg):
-    s = accounts[0].deploy(MinterServiceNoAgent,sub_reg, "Minter without Agent", 'MWA')
+    s = accounts[0].deploy(MinterServiceNoAgent,sub_reg, "Minter without Agent", 'MWA1')
+    yield s
+
+@pytest.fixture(scope="module")
+def minter2(accounts, MinterServiceWithAgent, sub_reg):
+    s = accounts[0].deploy(MinterServiceWithAgent, sub_reg, "Minter with Agent", 'MWA2')
+    yield s
+
+@pytest.fixture(scope="module")
+def agent(accounts, Agent):
+    s = accounts[0].deploy(Agent)
     yield s
 
 @pytest.fixture(scope="module")
@@ -46,20 +56,6 @@ def wrapper(accounts, pm):
     wa = pm('envelopv1').WrapperLightV1
     w = accounts[0].deploy(wa)
     yield w
-
-
-@pytest.fixture(scope="module")
-def techERC20(accounts, pm):
-    wa = pm('envelopv1').TechTokenV1
-    tech = accounts[0].deploy(wa)
-    yield tech
-
-
-@pytest.fixture(scope="module")
-def wrapperTrustedV1(accounts, techERC20, pm, sub_reg):
-    wa = pm('envelopv1').TrustedWrapper
-    t = accounts[0].deploy(wa, techERC20.address, sub_reg.address)
-    yield t 
 
 @pytest.fixture(scope="module")
 def wnft721(accounts, pm):

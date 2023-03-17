@@ -9,10 +9,10 @@ PRICE = 1e18
 zero_address = '0x0000000000000000000000000000000000000000'
 
 #service provider is selfAgent. Buy ticket by wrapping erc20 tokens and call serviceProvider method. Without Agent. Ticket is with counts
-def test_buy_subscription(accounts, dai, weth, sub_reg, minter1, wrapperTrustedV1, wnft721):
+def test_buy_subscription(accounts, dai, weth, sub_reg, minter1, wrapper, wnft721):
 
 	#set wrapper
-	sub_reg.setMainWrapper(wrapperTrustedV1.address, {"from": accounts[0]})
+	sub_reg.setMainWrapper(wrapper.address, {"from": accounts[0]})
 
 	payOptions = [(dai, PRICE, 0), (weth, PRICE/5, 0)] #without Agent fee
 	subscriptionType = (200,0,1,True, zero_address) #without service Provider
@@ -27,18 +27,15 @@ def test_buy_subscription(accounts, dai, weth, sub_reg, minter1, wrapperTrustedV
 	#register agent - self service Provider
 	minter1.authorizeAgentForService(minter1.address, [0],{"from": accounts[0]})
 
-	if (wrapperTrustedV1.lastWNFTId(3)[1] == 0):
-		wrapperTrustedV1.setWNFTId(3, wnft721.address, 0, {'from':accounts[0]})
-	wnft721.setMinter(wrapperTrustedV1.address, {"from": accounts[0]})
+	if (wrapper.lastWNFTId(3)[1] == 0):
+		wrapper.setWNFTId(3, wnft721.address, 0, {'from':accounts[0]})
+	wnft721.setMinter(wrapper.address, {"from": accounts[0]})
 	
 	pay_amount = payOptions[1][1]
 
 	pay_amount = payOptions[1][1]
 	weth.approve(sub_reg.address, pay_amount, {"from": accounts[1]})
 	weth.transfer(accounts[1], pay_amount, {"from": accounts[0]})
-
-	before_acc1 = weth.balanceOf(accounts[1])
-	before_w = weth.balanceOf(wrapperTrustedV1.address)
 
 	tx = minter1.buySubscription(minter1.address, 0, 1, accounts[1], accounts[1], {"from": accounts[1]})
 
