@@ -1,7 +1,20 @@
 // SPDX-License-Identifier: MIT
-// ENVELOP(NIFTSY) protocol V1 for NFT. Service Agent 
-// abstract contract implements service agent logic.
-// For use in cases with subscription regitry contract
+// ENVELOP(NIFTSY) Subscription Registry Contract V2
+
+
+/// The subscription platform operates with the following role model 
+/// (it is assumed that the actor with the role is implemented as a contract).
+/// `Service Provider` is a contract whose services are sold by subscription.
+/// `Agent` - a contract that sells a subscription on behalf ofservice provider. 
+///  May receive sales commission
+///  `Platform` - SubscriptionRegistry contract that performs processingsubscriptions, 
+///  fares, tickets
+
+
+pragma solidity 0.8.16;
+
+import {Ticket} from "../contracts/SubscriptionRegistry.sol";
+import "../interfaces/IServiceProvider.sol";
 
 /// @title ServiceAgent abstract contract 
 /// @author Envelop project Team
@@ -9,12 +22,6 @@
 /// For use with SubscriptionRegestry
 /// @dev Use this code in service agent
 /// for tickets selling
-
-pragma solidity 0.8.16;
-
-import {Ticket} from "../contracts/SubscriptionRegistry.sol";
-import "../interfaces/IServiceProvider.sol";
-
 abstract contract ServiceAgent{
 
 	//address public serviceProvider;
