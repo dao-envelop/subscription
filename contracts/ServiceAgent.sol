@@ -13,6 +13,7 @@
 
 pragma solidity 0.8.16;
 
+import "@openzeppelin/contracts/token/ERC20/utils/SafeERC20.sol";
 import {Ticket} from "../contracts/SubscriptionRegistry.sol";
 import "../interfaces/IServiceProvider.sol";
 
@@ -23,11 +24,10 @@ import "../interfaces/IServiceProvider.sol";
 /// @dev Use this code in service agent
 /// for tickets selling
 abstract contract ServiceAgent{
-
-	//address public serviceProvider;
-    //ISubscriptionRegistry public subscriptionRegistry;
+    using SafeERC20 for IERC20;
 
 	
+    receive() external payable {}
     function buySubscription(
         address _service,
         uint256 _tarifIndex,
@@ -50,5 +50,14 @@ abstract contract ServiceAgent{
             _payer
         );
 
+    }
+
+    function withdrawEther(address _feeReceiver) internal  {
+        address payable o = payable(_feeReceiver);
+        o.transfer(address(this).balance);
+    }
+
+    function withdrawTokens(address _erc20, address _feeReceiver) internal  {
+        IERC20(_erc20).safeTransfer(_feeReceiver, IERC20(_erc20).balanceOf(address(this)));
     }
 }
