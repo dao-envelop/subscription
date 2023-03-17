@@ -90,7 +90,14 @@ contract ServiceAndAgent is ServiceProvider, ServiceAgent, Ownable {
     }
 
      
-    
+    function withdrawFeeEther() external onlyOwner {
+        withdrawEther(msg.sender);
+        
+    }
+
+    function withdrawFeeERC20(address _erc20) external onlyOwner {
+        withdrawTokens(_erc20, msg.sender);
+    }
     
 
 }
