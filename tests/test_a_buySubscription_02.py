@@ -49,6 +49,14 @@ def test_buy_subscription(accounts, dai, weth, sub_reg, minter1):
 	minter1.mint(1, {"from": accounts[1]})
 
 	assert minter1.ownerOf(1) == accounts[1]
+
+	chain.sleep(120)
+	chain.mine()
+
+	with reverts("Valid ticket not found"):
+		minter1.mint(2, {"from": accounts[1]})
+
+
   
 
 
