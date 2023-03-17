@@ -642,7 +642,7 @@ contract SubscriptionRegistry is Ownable {
 
                 // 2.5. Agent fee payment
                 sendValue(
-                    payable(availableTariffs[_service][_tariffIndex].subscription.beneficiary),
+                    payable(msg.sender),
                     availableTariffs[_service][_tariffIndex].payWith[_payWithIndex].paymentAmount
                       *availableTariffs[_service][_tariffIndex].payWith[_payWithIndex].agentFeePercent
                       /PERCENT_DENOMINATOR
