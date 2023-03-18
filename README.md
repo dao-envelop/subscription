@@ -15,7 +15,7 @@ dotenv: .env
 compiler:
     solc:
         remappings:
-          - "@envelopv1=dao-envelop/subscription@0.0.1"
+          - "@envelopv1=dao-envelop/subscription@0.0.2"
 ```
 3. Then you can use @substitution in your Solidity code:
 ```solidity
@@ -27,4 +27,4 @@ We use Brownie framework for developing and unit test. For run tests
 first please [install it](https://eth-brownie.readthedocs.io/en/stable/install.html)  
 To run long tests you must rename test files in tests folder before running (delete "long_").
 
-So just clone https://github.com/dao-envelop/subscription  and good luck!
+So just clone https://github.com/dao-envelop/subscription , install dependencies and good luck!
