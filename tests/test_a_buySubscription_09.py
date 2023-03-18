@@ -56,7 +56,7 @@ def test_buy_subscription(accounts, dai, weth, sub_reg, minter2, agent):
 	balance_agent = agent.balance()
 	balance_acc4 = accounts[4].balance()
 	with reverts("Ownable: caller is not the owner"):
-		agent.withdrawEthers(accounts[4], {"from": accounts[1]})
-	agent.withdrawEthers(accounts[4])
+		agent.withdrawEther(accounts[4], {"from": accounts[1]})
+	agent.withdrawEther(accounts[4])
 	assert agent.balance() == 0
 	assert accounts[4].balance() == balance_agent + balance_acc4

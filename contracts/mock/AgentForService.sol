@@ -7,11 +7,11 @@ import '../ServiceAgent.sol';
 
 contract AgentForService is Ownable, ServiceAgent  {
 
-	function withdrawEthers(address _feeReceiver) external onlyOwner {
-	        withdrawEther(_feeReceiver);
+	function withdrawEther(address _feeReceiver) external onlyOwner {
+	        _withdrawEther(_feeReceiver);
     }
 
-    function withdrawERC20Tokens(address _erc20, address _feeReceiver) external onlyOwner {
-	        withdrawTokens(_erc20, _feeReceiver);
+    function withdrawTokens(address _erc20, address _feeReceiver) external onlyOwner {
+	        _withdrawTokens(_erc20, _feeReceiver);
     }
 }

@@ -59,7 +59,7 @@ def test_buy_subscription(accounts, dai, weth, sub_reg, minter2, agent):
 	balance_agent = weth.balanceOf(agent)
 	balance_acc4 = weth.balanceOf(accounts[4])
 	with reverts("Ownable: caller is not the owner"):
-		agent.withdrawERC20Tokens(weth.address, accounts[4], {"from": accounts[1]})
-	agent.withdrawERC20Tokens(weth.address, accounts[4])
+		agent.withdrawTokens(weth.address, accounts[4], {"from": accounts[1]})
+	agent.withdrawTokens(weth.address, accounts[4])
 	assert weth.balanceOf(agent) == 0
 	assert weth.balanceOf(accounts[4]) == balance_agent + balance_acc4
