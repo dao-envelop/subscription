@@ -9,7 +9,7 @@ PRICE = 1e18
 zero_address = '0x0000000000000000000000000000000000000000'
 
 #service provider is selfAgent. Buy ticket for ether and call serviceProvider method. Without Agent. Ticket is with counts
-def test_buy_subscription(accounts, dai, weth, sub_reg, minter1, wrapperTrustedV1, wnft721):
+def test_buy_subscription(accounts, dai, weth, sub_reg, minter1, wrapper, wnft721):
 
 	payOptions = [(dai, PRICE, 0), (zero_address, PRICE/5, 0)] #without Agent fee
 	subscriptionType = (0,0,1,True, zero_address) #without service Provider
