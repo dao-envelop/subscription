@@ -47,8 +47,8 @@ def minter2(accounts, MinterServiceWithAgent, sub_reg):
     yield s
 
 @pytest.fixture(scope="module")
-def agent(accounts, Agent):
-    s = accounts[0].deploy(Agent)
+def agent(accounts, AgentForService):
+    s = accounts[0].deploy(AgentForService)
     yield s
 
 @pytest.fixture(scope="module")

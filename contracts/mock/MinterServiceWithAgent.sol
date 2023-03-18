@@ -5,7 +5,6 @@ pragma solidity 0.8.16;
 import "@openzeppelin/contracts/token/ERC721/extensions/ERC721URIStorage.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
 import '../ServiceProvider.sol';
-import '../ServiceAgent.sol';
 
 contract MinterServiceWithAgent is ERC721URIStorage, ServiceProvider, Ownable {
 	

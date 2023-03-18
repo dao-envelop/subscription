@@ -23,8 +23,6 @@ def test_buy_subscription(accounts, dai, weth, sub_reg, minter1):
 	minter1.registerServiceTariff(tariff1,{'from':accounts[0]})
 	#register agent - self service Provider
 	minter1.authorizeAgentForService(minter1.address, [0],{"from": accounts[0]})
-
-	#try to mint - serviceProvider is registered. But agent is not added
 	
 	pay_amount = payOptions[1][1]*(sub_reg.PERCENT_DENOMINATOR()+sub_reg.platformFeePercent())/sub_reg.PERCENT_DENOMINATOR()
 

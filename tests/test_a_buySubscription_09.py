@@ -23,8 +23,6 @@ def test_buy_subscription(accounts, dai, weth, sub_reg, minter2, agent):
 	minter2.registerServiceTariff(tariff1,{'from':accounts[0]})
 	#register agent - self service Provider
 	minter2.authorizeAgentForService(agent.address, [0],{"from": accounts[0]})
-
-	#try to mint - serviceProvider is registered. But agent is not added
 	
 	pay_amount = payOptions[1][1]*(sub_reg.PERCENT_DENOMINATOR()+sub_reg.platformFeePercent() + payOptions[1][2])/sub_reg.PERCENT_DENOMINATOR()
 
@@ -42,7 +40,7 @@ def test_buy_subscription(accounts, dai, weth, sub_reg, minter2, agent):
 	#check balance
 	assert accounts[1].balance() == before_acc1 - pay_amount # payer balance
 	assert accounts[0].balance() == before_acc0 + payOptions[1][1]*sub_reg.platformFeePercent()/sub_reg.PERCENT_DENOMINATOR() # planform beneficiary balance
-	assert accounts[3].balance() == before_acc0 + payOptions[1][1] # serviceProvider beneficiary balance
+	assert accounts[3].balance() == before_acc3 + payOptions[1][1] # serviceProvider beneficiary balance
 	assert agent.balance() == before_agent + payOptions[1][1]*payOptions[1][2]/sub_reg.PERCENT_DENOMINATOR() #  agent balance
 
 	minter2.mint(1, {"from": accounts[1]})
@@ -54,3 +52,11 @@ def test_buy_subscription(accounts, dai, weth, sub_reg, minter2, agent):
 
 	with reverts("Valid ticket not found"):
 		minter2.mint(2, {"from": accounts[1]})
+
+	balance_agent = agent.balance()
+	balance_acc4 = accounts[4].balance()
+	with reverts("Ownable: caller is not the owner"):
+		agent.withdrawEthers(accounts[4], {"from": accounts[1]})
+	agent.withdrawEthers(accounts[4])
+	assert agent.balance() == 0
+	assert accounts[4].balance() == balance_agent + balance_acc4

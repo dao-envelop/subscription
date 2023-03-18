@@ -44,7 +44,7 @@ def test_buy_subscription(accounts, dai, weth, sub_reg, minter1):
 	#check balance
 	assert accounts[1].balance() == before_acc1 - pay_amount # payer balance
 	assert accounts[0].balance() == before_acc0 + payOptions[1][1]*sub_reg.platformFeePercent()/sub_reg.PERCENT_DENOMINATOR() # planform beneficiary balance
-	assert accounts[3].balance() == before_acc0 + payOptions[1][1] # serviceProvider beneficiary balance
+	assert accounts[3].balance() == before_acc3 + payOptions[1][1] # serviceProvider beneficiary balance
 
 	minter1.mint(1, {"from": accounts[1]})
 
