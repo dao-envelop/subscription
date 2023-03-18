@@ -4,8 +4,8 @@ pragma solidity 0.8.16;
 
 import "@openzeppelin/contracts/access/Ownable.sol";
 import "@openzeppelin/contracts/token/ERC20/utils/SafeERC20.sol";
-import "@envelopv1/interfaces/ITrustedWrapper.sol";
-import "@envelopv1/contracts/LibEnvelopTypes.sol";
+import "@envelop-protocol-v1/interfaces/ITrustedWrapper.sol";
+import "@envelop-protocol-v1/contracts/LibEnvelopTypes.sol";
 import "../interfaces/ISubscriptionRegistry.sol";
 
 /// The subscription platform operates with the following role model 
