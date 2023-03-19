@@ -16,8 +16,8 @@ def test_buy_subscription(accounts, dai, weth, sub_reg, minter1, wrapper, wnft72
 		sub_reg.setMainWrapper(wrapper.address, {"from": accounts[1]})
 	sub_reg.setMainWrapper(wrapper.address, {"from": accounts[0]})
 
-	payOptions = [(dai, PRICE, 0), (weth, PRICE/5, 0)] #without Agent fee
-	subscriptionType = (200,100,0,True, zero_address) #without service Provider
+	payOptions = [(dai, PRICE, 100), (weth, PRICE/5, 100)] #with Agent fee - agent does not have to get any erc20 tokens
+	subscriptionType = (200,100,0,True, accounts[9]) #with service Provider beneficiary - special case 
 	tariff1 = (subscriptionType, payOptions)
 	
 	#add tokens to whiteList
@@ -62,11 +62,15 @@ def test_buy_subscription(accounts, dai, weth, sub_reg, minter1, wrapper, wnft72
 	#check balance
 	assert weth.balanceOf(accounts[1]) == before_acc1 - pay_amount # payer balance
 	assert weth.balanceOf(wrapper.address) == before_w + pay_amount # wrapper balance
+	assert weth.balanceOf(accounts[9]) == 0
+	assert weth.balanceOf(minter1) == 0
+
 
 	minter1.mint(1, {"from": accounts[1]})
 
 	assert minter1.ownerOf(1) == accounts[1]
 	assert wnft721.balanceOf(accounts[1]) == 1 #check wnft
+	assert wnft721.balanceOf(accounts[9]) == 0
 
 	#check wnft
 	assert wnft721.wnftInfo(wTokenId)[0] == ((0, zero_address), 0, 0) 

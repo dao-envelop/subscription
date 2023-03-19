@@ -118,4 +118,8 @@ contract MinterServiceNoAgent is ERC721URIStorage, ServiceProvider, ServiceAgent
 	        _mint(msg.sender, tokenId);
 	    }
 
+	    function changeSubscriptionRegistry(address _subscrRegistry) external onlyOwner {
+	    	subscriptionRegistry = ISubscriptionRegistry(_subscrRegistry);
+	    }
+
 }

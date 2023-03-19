@@ -30,8 +30,6 @@ def test_buy_subscription(accounts, dai, weth, sub_reg, minter1, wrapper, wnft72
 	if (wrapper.lastWNFTId(3)[1] == 0):
 		wrapper.setWNFTId(3, wnft721.address, 0, {'from':accounts[0]})
 	wnft721.setMinter(wrapper.address, {"from": accounts[0]})
-	
-	pay_amount = payOptions[1][1]
 
 	pay_amount = payOptions[1][1]
 	weth.approve(sub_reg.address, pay_amount, {"from": accounts[1]})
