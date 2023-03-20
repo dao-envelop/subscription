@@ -8,7 +8,8 @@ from web3 import Web3
 PRICE = 1e18
 zero_address = '0x0000000000000000000000000000000000000000'
 
-#service provider has Agent. Buy ticket for ether and call agent buySubscription method. With Agent. Ticket is with expiring time
+#service provider has Agent. Buy ticket for ether and call agent buySubscription method. With Agent. Ticket is with expiring time 
+# and count lefts
 def test_buy_subscription(accounts, dai, weth, sub_reg, minter2, agent):
 
 	payOptions = [(dai, PRICE, 0), (zero_address, PRICE/5, 0)] #without Agent fee!!!
@@ -49,12 +50,8 @@ def test_buy_subscription(accounts, dai, weth, sub_reg, minter2, agent):
 	with reverts("Only one valid ticket at time"):
 		agent.buySubscription(minter2.address, 0, 1, accounts[1], accounts[1], {"from": accounts[1], "value": pay_amount})
 
-	#move time
-	chain.sleep(120)
-	chain.mine()
-
 	#subscription is expired. Buy new time subscription
-	agent.buySubscription(minter2.address, 0, 1, accounts[1], accounts[1], {"from": accounts[1], "value": pay_amount})
+	#agent.buySubscription(minter2.address, 0, 1, accounts[1], accounts[1], {"from": accounts[1], "value": pay_amount})
 
 	payOptions = [(dai, PRICE, 0), (zero_address, PRICE/5, 0)] #without Agent fee!!!
 	subscriptionType = (0,0,1,True, accounts[3])  #count subscription
@@ -65,7 +62,35 @@ def test_buy_subscription(accounts, dai, weth, sub_reg, minter2, agent):
 	#register agent - separate agent
 	minter2.authorizeAgentForService(agent.address, [0,1],{"from": accounts[0]})
 
-	logging.info(sub_reg.getAvailableAgentsTariffForService(agent.address, minter2.address ))
+	with reverts("Only one valid ticket at time"):
+		agent.buySubscription(minter2.address, 1, 1, accounts[1], accounts[1], {"from": accounts[1], "value": pay_amount}) #try to buy count subscription
+
+	#move time
+	chain.sleep(120)
+	chain.mine()
+	#tariffs is in different order - 0 is tariff with count
+	agent.buySubscription(minter2.address, 1, 1, accounts[1], accounts[1], {"from": accounts[1], "value": pay_amount}) #try to buy count subscription
+	#try to buy count ticket again
+	with reverts("Only one valid ticket at time"):
+		agent.buySubscription(minter2.address, 1, 1, accounts[1], accounts[1], {"from": accounts[1], "value": pay_amount}) #try to buy count subscription
+		
+	ticket = sub_reg.getUserTicketForService(minter2.address, accounts[1])
+	assert ticket[0] <= chain.time()
+	assert ticket[1] ==  1
+
+	minter2.mint(2, {"from": accounts[1]})
+	#check - count lefts is changed
+	ticket = sub_reg.getUserTicketForService(minter2.address, accounts[1])
+	assert ticket[0] <= chain.time()
+	assert ticket[1] ==  0
+
+	#count lefts is 0. Buy new count subscription
+	agent.buySubscription(minter2.address, 1, 1, accounts[1], accounts[1], {"from": accounts[1], "value": pay_amount}) #try to buy count subscription again.
+
+	ticket = sub_reg.getUserTicketForService(minter2.address, accounts[1])
+	assert ticket[0] <= chain.time()
+	assert ticket[1] ==  1
+
 
 
 

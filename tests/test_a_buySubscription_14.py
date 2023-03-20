@@ -51,7 +51,7 @@ def test_buy_subscription(accounts, dai, weth, sub_reg, minter2, agent, Subscrip
 
 	#subscription registry is new but user uses ticket of old subscription
 	minter2.mint(1, {"from": accounts[1]})
-	#try to buy subscription - new subscription registry, there are not registered tariffs
+	#try to buy subscription - new subscription registry, there are not registered tariffs in new subscription registry
 	with reverts("Index out of range"):
 		agent.buySubscription(minter2.address, 0, 1, accounts[1], accounts[1], {"from": accounts[1], "value": pay_amount})
 
@@ -67,27 +67,13 @@ def test_buy_subscription(accounts, dai, weth, sub_reg, minter2, agent, Subscrip
 	#register agent - separate agent
 	minter2.authorizeAgentForService(agent.address, [0],{"from": accounts[0]})
 
-
-	#subscription is expired. Buy new time subscription
+	#subscription is expired. Buy new count subscription
+	pay_amount = payOptions[1][1]*(sub_reg_new.PERCENT_DENOMINATOR()+sub_reg_new.platformFeePercent() + payOptions[1][2])/sub_reg_new.PERCENT_DENOMINATOR()
 	agent.buySubscription(minter2.address, 0, 1, accounts[1], accounts[1], {"from": accounts[1], "value": pay_amount})
 
-	assert sub_reg_new.getAvailableAgentsTariffForService(agent.address, minter2.address )[0] == tariff1
-
-
-	'''
-	chain.sleep(120)
-	chain.mine()
-
-	
-
-	
-
-	
-
-	#buy tarif with counts. There is valid time subscription
-	
-	with reverts("Only one valid ticket at time"):
-		agent.buySubscription(minter2.address, 1, 1, accounts[1], accounts[1], {"from": accounts[1], "value": pay_amount}) #buy tarif with counts'''
+	ticket = sub_reg_new.getUserTicketForService(minter2.address, accounts[1])
+	assert ticket[0] <= chain.time()
+	assert ticket[1] == subscriptionType[2]
 
 
 

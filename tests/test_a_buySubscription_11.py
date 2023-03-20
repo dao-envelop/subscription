@@ -22,7 +22,7 @@ def test_buy_subscription(accounts, dai, weth, sub_reg, minter2, agent):
 
 	#register tariffs for service
 	minter2.registerServiceTariff(tariff1,{'from':accounts[0]})
-	#register agent - self service Provider
+	#register agent - separate agent
 	minter2.authorizeAgentForService(agent.address, [0],{"from": accounts[0]})
 	
 	pay_amount = payOptions[1][1]*(sub_reg.PERCENT_DENOMINATOR()+sub_reg.platformFeePercent() + payOptions[1][2])/sub_reg.PERCENT_DENOMINATOR()
