@@ -36,6 +36,9 @@ abstract contract ServiceAgent{
         address _payer
     ) public payable returns(Ticket memory ticket)
     {
+        if (msg.value > 0){
+            require(_payer == msg.sender, 'Only msg.sender can be payer');
+        }
         // get service provider
         IServiceProvider sP = IServiceProvider(_service);
         

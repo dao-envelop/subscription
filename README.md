@@ -7,7 +7,7 @@ The subscription platform operates with the following role model (it is assumed 
 ## Usage with eth-brownie framework
 1. Install package
 ```bash
-brownie pm install dao-envelop/subscription@0.0.1
+brownie pm install dao-envelop/subscription@0.0.2		
 ```
 2. Edit `brownie-config.yaml`, something like
 ```yaml
@@ -15,7 +15,7 @@ dotenv: .env
 compiler:
     solc:
         remappings:
-          - "@envelopv1=dao-envelop/subscription@0.0.2"
+          - "@envelop-subscription=dao-envelop/subscription@0.0.2"
 ```
 3. Then you can use @substitution in your Solidity code:
 ```solidity
