@@ -21,7 +21,7 @@ def test_buy_subscription(accounts, dai, weth, sub_reg, minter2, agent):
 
 	#register tariffs for service
 	minter2.registerServiceTariff(tariff1,{'from':accounts[0]})
-	#register agent - self service Provider
+	#register agent - separate agent
 	minter2.authorizeAgentForService(agent.address, [0],{"from": accounts[0]})
 	
 	pay_amount = payOptions[1][1]*(sub_reg.PERCENT_DENOMINATOR()+sub_reg.platformFeePercent() + payOptions[1][2])/sub_reg.PERCENT_DENOMINATOR()
@@ -57,16 +57,22 @@ def test_buy_subscription(accounts, dai, weth, sub_reg, minter2, agent):
 
 	payOptions = [(dai, PRICE, 0), (zero_address, PRICE/5, 0)] #without Agent fee!!!
 	subscriptionType = (0,0,1,True, accounts[3])  #count subscription
+	tariff1 = (subscriptionType, payOptions)
 
 	#register tariffs for service
 	minter2.registerServiceTariff(tariff1,{'from':accounts[0]})
-	#register agent - self service Provider
+	#register agent - separate agent
 	minter2.authorizeAgentForService(agent.address, [0,1],{"from": accounts[0]})
 
-	#buy tarif with counts. There is valid time subscription
-	
-	with reverts("Only one valid ticket at time"):
-		agent.buySubscription(minter2.address, 1, 1, accounts[1], accounts[1], {"from": accounts[1], "value": pay_amount}) #buy tarif with counts
+	logging.info(sub_reg.getAvailableAgentsTariffForService(agent.address, minter2.address ))
+
+	#buy tarif with counts. There is valid time subscription on old subscription registry contract
+	pay_amount = payOptions[1][1]*(sub_reg_new.PERCENT_DENOMINATOR()+sub_reg_new.platformFeePercent() + payOptions[1][2])/sub_reg_new.PERCENT_DENOMINATOR()
+	agent.buySubscription(minter2.address, 0, 1, accounts[1], accounts[1], {"from": accounts[1], "value": pay_amount}) #buy tarif with counts
+
+	ticket = sub_reg_new.getUserTicketForService(minter2.address, accounts[1])
+	assert ticket[0] == subscriptionType[1]
+	assert ticket[1] == subscriptionType[2]
 
 
 
