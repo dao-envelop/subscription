@@ -33,7 +33,9 @@ def test_buy_subscription(accounts, dai, weth, sub_reg, minter2, agent):
 	before_acc2 = accounts[2].balance()
 	before_agent = agent.balance()
 	#pay for ether  - #more than necessary
-	agent.buySubscription(minter2.address, 0, 1, accounts[1], accounts[2], {"from": accounts[1], "value": 2*pay_amount}) #more than necessary
+	with reverts("Only msg.sender can be payer"):
+		agent.buySubscription(minter2.address, 0, 1, accounts[1], accounts[2], {"from": accounts[1], "value": 2*pay_amount}) #more than necessary
+	agent.buySubscription(minter2.address, 0, 1, accounts[1], accounts[1], {"from": accounts[1], "value": 2*pay_amount}) #more than necessary
 
 	ticket = sub_reg.getUserTicketForService(minter2.address, accounts[1])
 	assert ticket[0] > 0
