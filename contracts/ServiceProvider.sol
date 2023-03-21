@@ -115,16 +115,6 @@ abstract contract ServiceProvider {
             );
     }
 
-    
-    // function _fixUserSubscription(
-    //     address _user
-    // ) internal {
-    //         subscriptionRegistry.fixUserSubscription(
-    //             _user,
-    //             address(this)
-    //         );
-    // }
-
     function _checkUserSubscription(address _user) 
         internal 
         view 
