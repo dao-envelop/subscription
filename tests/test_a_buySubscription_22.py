@@ -118,7 +118,7 @@ def test_buy_subscription(accounts, dai, weth, sub_reg, minter1, agent, wrapper,
 
 	before_acc0 = accounts[0].balance()
 	before_acc3 = accounts[3].balance()
-	before_acc4 = accounts[2].balance()
+	before_acc4 = accounts[4].balance()
 	before_agent = agent.balance()
 
 
@@ -162,12 +162,6 @@ def test_buy_subscription(accounts, dai, weth, sub_reg, minter1, agent, wrapper,
 	ticket = sub_reg.getUserTicketForService(minter1.address, accounts[5])
 	assert ticket[0] <= chain.time()
 	assert ticket[1] == 1
-
-	'''minter1.fixUserSubscription(accounts[5], {"from": accounts[1]})
-
-	ticket = sub_reg.getUserTicketForService(minter1.address, accounts[5])
-	assert ticket[0] <= chain.time()
-	assert ticket[1] == 0'''
 
 	minter1.mint(6, {"from": accounts[5]})
 	ticket = sub_reg.getUserTicketForService(minter1.address, accounts[5])

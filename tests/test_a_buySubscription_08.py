@@ -27,7 +27,7 @@ def test_buy_subscription(accounts, dai, weth, sub_reg, minter1, wrapper, wnft72
 	pay_amount = payOptions[1][1]*(sub_reg.PERCENT_DENOMINATOR()+sub_reg.platformFeePercent())/sub_reg.PERCENT_DENOMINATOR()
 
 	#logging.info()
-	minter1.buySubscription(minter1.address, 0, 1, accounts[1], accounts[2], {"from": accounts[1], "value": pay_amount})
+	minter1.buySubscription(minter1.address, 0, 1, accounts[1], accounts[1], {"from": accounts[1], "value": pay_amount})
 
 	minter1.mint(1, {"from": accounts[1]})
 	#counts ran out

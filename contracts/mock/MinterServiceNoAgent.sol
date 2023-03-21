@@ -87,22 +87,6 @@ contract MinterServiceNoAgent is ERC721URIStorage, ServiceProvider, ServiceAgent
 	    ////////////////////////////
 	    //        Main USAGE      //
 	    ////////////////////////////
-	    /*function checkAndFixSubscription(address _user) 
-	        external 
-	        returns (bool ok) 
-	    {
-	            ok = _checkAndFixSubscription(_user);
-	    }
-
-	    
-	    function fixUserSubscription(
-	        address _user
-	    ) external {
-	            _fixUserSubscription(
-	                _user
-	            );
-	    }*/
-
 	    function checkUserSubscription(address _user) 
 	        external 
 	        view 
