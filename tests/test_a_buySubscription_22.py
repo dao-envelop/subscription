@@ -22,11 +22,16 @@ def test_buy_subscription(accounts, dai, weth, sub_reg, minter1, agent, wrapper,
 	tariff1 = (subscriptionType1, payOptions1)
 
 	#add tokens to whiteList
-	sub_reg.setAssetForPaymentState(dai, True, {'from':accounts[0]})
+	tx = sub_reg.setAssetForPaymentState(dai, True, {'from':accounts[0]})
+	assert tx.events['WhitelistPaymentTokenChanged']['asset'] == dai.address
+	assert tx.events['WhitelistPaymentTokenChanged']['state'] == True
+
 	sub_reg.setAssetForPaymentState(zero_address, True, {'from':accounts[0]})
 
 	#register tariffs for service
-	minter1.registerServiceTariff(tariff1,{'from':accounts[0]})
+	tx = minter1.registerServiceTariff(tariff1,{'from':accounts[0]})
+	assert tx.events['TariffChanged']['service'] == minter1.address
+	assert tx.events['TariffChanged']['tariffIndex'] == 0
 
 	payOptions2 = [(dai, PRICE/2, 300), (zero_address, PRICE/10, 300)] #with Agent fee!!!
 	subscriptionType2 = (0,100,0,True, accounts[3]) #time subscription with time lock
@@ -57,7 +62,12 @@ def test_buy_subscription(accounts, dai, weth, sub_reg, minter1, agent, wrapper,
 	before_m = dai.balanceOf(minter1)
 
 	#pay by wrapping erc20 - using self Agent, time ticket
-	minter1.buySubscription(minter1.address, 0, 0, accounts[1], accounts[1], {"from": accounts[1]})
+	tx = minter1.buySubscription(minter1.address, 0, 0, accounts[1], accounts[1], {"from": accounts[1]})
+
+	assert tx.events['TicketIssued']['service'] == minter1.address
+	assert tx.events['TicketIssued']['agent'] == minter1.address
+	assert tx.events['TicketIssued']['forUser'] == accounts[1]
+	assert tx.events['TicketIssued']['tariffIndex'] == 0
 
 	ticket = sub_reg.getUserTicketForService(minter1.address, accounts[1])
 	assert ticket[0] > 0
@@ -84,7 +94,12 @@ def test_buy_subscription(accounts, dai, weth, sub_reg, minter1, agent, wrapper,
 	assert sub_reg.getTicketPrice(minter1.address, 1,0)[1] == pay_amount
 
 	#buy usins second tariff and second agent - time subscription
-	agent.buySubscription(minter1.address, 1, 0, accounts[2], accounts[2], {"from": accounts[2]})
+	tx = agent.buySubscription(minter1.address, 1, 0, accounts[2], accounts[2], {"from": accounts[2]})
+
+	assert tx.events['TicketIssued']['service'] == minter1.address
+	assert tx.events['TicketIssued']['agent'] == agent.address
+	assert tx.events['TicketIssued']['forUser'] == accounts[2]
+	assert tx.events['TicketIssued']['tariffIndex'] == 1
 
 	ticket = sub_reg.getUserTicketForService(minter1.address, accounts[2])
 	assert ticket[0] > chain.time()
@@ -135,6 +150,9 @@ def test_buy_subscription(accounts, dai, weth, sub_reg, minter1, agent, wrapper,
 	minter1.mint(4, {"from": accounts[1]})
 	minter1.mint(5, {"from": accounts[2]})
 
+	assert minter1.checkUserSubscription(accounts[2])[0] == True
+	assert minter1.checkUserSubscription(accounts[2])[1] == False
+
 	#buy ticket than switch off tariff
 	agent.buySubscription(minter1.address, 2, 1, accounts[5], accounts[5], {"from": accounts[5], "value": pay_amount})
 
@@ -145,10 +163,18 @@ def test_buy_subscription(accounts, dai, weth, sub_reg, minter1, agent, wrapper,
 	assert ticket[0] <= chain.time()
 	assert ticket[1] == 1
 
+	'''minter1.fixUserSubscription(accounts[5], {"from": accounts[1]})
+
+	ticket = sub_reg.getUserTicketForService(minter1.address, accounts[5])
+	assert ticket[0] <= chain.time()
+	assert ticket[1] == 0'''
+
 	minter1.mint(6, {"from": accounts[5]})
 	ticket = sub_reg.getUserTicketForService(minter1.address, accounts[5])
 	assert ticket[0] <= chain.time()
 	assert ticket[1] == 0
+	assert minter1.checkUserSubscription(accounts[5])[0] == False
+	assert minter1.checkUserSubscription(accounts[5])[1] == False
 
 	#try to buy ticket. Tariff is switched off  
 	with reverts("This subscription not available"):

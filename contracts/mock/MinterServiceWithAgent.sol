@@ -86,7 +86,7 @@ contract MinterServiceWithAgent is ERC721URIStorage, ServiceProvider, Ownable {
 	    ////////////////////////////
 	    //        Main USAGE      //
 	    ////////////////////////////
-	    function checkAndFixSubscription(address _user) 
+	    /*function checkAndFixSubscription(address _user) 
 	        external 
 	        returns (bool ok) 
 	    {
@@ -100,7 +100,7 @@ contract MinterServiceWithAgent is ERC721URIStorage, ServiceProvider, Ownable {
 	            _fixUserSubscription(
 	                _user
 	            );
-	    }
+	    }*/
 
 	    function checkUserSubscription(address _user) 
 	        external 
