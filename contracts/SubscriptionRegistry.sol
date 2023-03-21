@@ -328,7 +328,7 @@ contract SubscriptionRegistry is Ownable {
         
         // Fix action (for subscription with counter)
         if (needFix){
-            fixUserSubscription(_user, msg.sender);    
+            _fixUserSubscription(_user, msg.sender);    
         }
                 
         ok = true;
@@ -345,14 +345,10 @@ contract SubscriptionRegistry is Ownable {
         address _user,
         address _serviceFromProxy
     ) public {
-        address service = msg.sender;
-        if (proxyRegistry !=address(0) && msg.sender == proxyRegistry){
-            service = _serviceFromProxy;
-        }
-        // Fix action (for subscription with counter)
-        if (userTickets[_user][service].countsLeft > 0) {
-            -- userTickets[_user][service].countsLeft; 
-        }
+        require(proxyRegistry !=address(0) && msg.sender == proxyRegistry,
+            'Only for future registry'
+        );
+        _fixUserSubscription(_user, _serviceFromProxy);
     }
 
     ////////////////////////////////////////////////////////////////
@@ -747,6 +743,17 @@ contract SubscriptionRegistry is Ownable {
         availableTariffs[_service][_tariffIndex].payWith[_payWithIndex] 
         = PayOption(_paymentToken, _paymentAmount, _agentFeePercent);  
         emit TariffChanged(_service, _tariffIndex);  
+    }
+
+    function _fixUserSubscription(
+        address _user,
+        address _service
+    ) internal {
+       
+        // Fix action (for subscription with counter)
+        if (userTickets[_user][_service].countsLeft > 0) {
+            -- userTickets[_user][_service].countsLeft; 
+        }
     }
 
         
