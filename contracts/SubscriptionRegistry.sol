@@ -448,7 +448,7 @@ contract SubscriptionRegistry is Ownable {
     function getAvailableAgentsTariffForService(
         address _agent, 
         address _service
-    ) external view virtual returns(uint256[] memory indexes, Tariff[] memory tarifs) 
+    ) external view virtual returns(uint256[] memory, Tariff[] memory) 
     {
         //First need get count of tarifs that still available
         uint256 availableCount;
@@ -474,6 +474,7 @@ contract SubscriptionRegistry is Ownable {
                 --availableCount;
             }
         }
+        return (indexes, tarifs);
     }    
     ////////////////////////////////////////////////////////////////
     //////////     Admins                                     //////
