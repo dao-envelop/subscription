@@ -85,7 +85,7 @@ def test_buy_subscription(accounts, dai, weth, sub_reg, minter1, EnvelopAgentWit
 	minter1.registerServiceTariff(tariff1,{'from':accounts[0]})
 
 
-	#register agent - self service Provider
+	#register agents - self service Provider and seperate Agent
 	minter1.authorizeAgentForService(minter1.address, [1,2,3,4,5,6],{"from": accounts[0]})
 	minter1.authorizeAgentForService(agent.address, [1,2,3,4,5,6,7,8],{"from": accounts[0]})
 
