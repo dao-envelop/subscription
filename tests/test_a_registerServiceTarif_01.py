@@ -61,7 +61,7 @@ def test_add_tariff(accounts, dai, weth, sub_reg):
     with reverts("Index out of range"):
         sub_reg.editServiceTariff(4, 0, 100, 0, True, accounts[6], {"from": accounts[2]})
 
-    #edit tariff
+    #edit tariff - switch tariff!!!
     sub_reg.editServiceTariff(0, 0, 100, 0, False, accounts[6], {"from": accounts[2]})
 
     #check edited tariff
@@ -114,8 +114,9 @@ def test_add_tariff(accounts, dai, weth, sub_reg):
     sub_reg.authorizeAgentForService(accounts[9], [0,1], {"from": accounts[2]})
     agent_tariffs = sub_reg.getAvailableAgentsTariffForService(accounts[9], accounts[2])
     actual_tariffs = sub_reg.getTariffsForService(accounts[2]);
-    assert agent_tariffs[0] == actual_tariffs[1]
-    assert len(agent_tariffs) == 1
+    assert agent_tariffs[1][0] == actual_tariffs[1]
+    assert len(agent_tariffs[0]) == 1 #one tariff is switched off
+    assert len(agent_tariffs[1]) == 1
 
     #change platform owner
     with reverts("Only platform owner"):

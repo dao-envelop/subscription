@@ -23,12 +23,13 @@ def test_register_agent(accounts, dai, weth, sub_reg, serviceAndAgent):
             serviceAndAgent,
             actual_tarifs
     ))
-    assert len(actual_tarifs) == 1    
+    assert len(actual_tarifs[0]) == 1    
+    assert len(actual_tarifs[1]) == 1    
 
 def test_buy_ticket(accounts, dai, weth, sub_reg, serviceAndAgent):
     actual_tarifs = sub_reg.getAvailableAgentsTariffForService(serviceAndAgent, serviceAndAgent)
-    dai.transfer(accounts[1], actual_tarifs[0][1][0][1]*20, {'from':accounts[0]})
-    dai.approve(sub_reg, actual_tarifs[0][1][0][1]*20, {'from':accounts[1]})
+    dai.transfer(accounts[1], actual_tarifs[1][0][1][0][1]*20, {'from':accounts[0]})
+    dai.approve(sub_reg, actual_tarifs[1][0][1][0][1]*20, {'from':accounts[1]})
     logging.info('Ticket price:{}'.format(sub_reg.getTicketPrice(serviceAndAgent,0,0)))
     ticket = serviceAndAgent.buyTicket({'from':accounts[1]})
     user_tickets = sub_reg.getUserTicketForService(serviceAndAgent, accounts[1])
