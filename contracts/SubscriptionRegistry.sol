@@ -263,6 +263,7 @@ contract SubscriptionRegistry is Ownable {
             'This subscription not available'
         );
 
+        // Not used in this implementation
         // require(
         //     availableTariffs[_service][_tariffIndex].payWith[_payWithIndex].paymentAmount > 0,
         //     'This Payment option not available'
