@@ -443,12 +443,12 @@ contract SubscriptionRegistry is Ownable {
      *
      * @param _agent - address of Agent
      * @param _service - address of Service Provider
-     * @return Tariff array
+     * @return tuple with two arrays: indexes and Tariffs
      */
     function getAvailableAgentsTariffForService(
         address _agent, 
         address _service
-    ) external view virtual returns(Tariff[] memory) 
+    ) external view virtual returns(uint256[] memory, Tariff[] memory) 
     {
         //First need get count of tarifs that still available
         uint256 availableCount;
@@ -459,20 +459,22 @@ contract SubscriptionRegistry is Ownable {
             ) {++availableCount;}
         }
         
-        Tariff[] memory result = new Tariff[](availableCount);
+        Tariff[]  memory tarifs = new Tariff[](availableCount);
+        uint256[] memory indexes = new uint256[](availableCount);
         for (uint256 i; i < agentServiceRegistry[_service][_agent].length; ++i){
             if (availableTariffs[_service][
                   agentServiceRegistry[_service][_agent][i]
                 ].subscription.isAvailable
             ) 
             {
-                result[availableCount - 1] = availableTariffs[_service][
+                tarifs[availableCount - 1] = availableTariffs[_service][
                   agentServiceRegistry[_service][_agent][i]
                 ];
+                indexes[availableCount - 1] = agentServiceRegistry[_service][_agent][i];
                 --availableCount;
             }
         }
-        return result;
+        return (indexes, tarifs);
     }    
     ////////////////////////////////////////////////////////////////
     //////////     Admins                                     //////
