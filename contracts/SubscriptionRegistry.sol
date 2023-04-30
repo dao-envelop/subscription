@@ -263,10 +263,10 @@ contract SubscriptionRegistry is Ownable {
             'This subscription not available'
         );
 
-        require(
-            availableTariffs[_service][_tariffIndex].payWith[_payWithIndex].paymentAmount > 0,
-            'This Payment option not available'
-        );
+        // require(
+        //     availableTariffs[_service][_tariffIndex].payWith[_payWithIndex].paymentAmount > 0,
+        //     'This Payment option not available'
+        // );
 
         // Check that agent is authorized for purchace of this service
         require(
@@ -285,8 +285,9 @@ contract SubscriptionRegistry is Ownable {
         userTickets[_buyFor][_service] = ticket;
 
         // Lets receive payment tokens FROM sender
-        _processPayment(_service, _tariffIndex, _payWithIndex, _payer);
-        
+        if (availableTariffs[_service][_tariffIndex].payWith[_payWithIndex].paymentAmount > 0){
+            _processPayment(_service, _tariffIndex, _payWithIndex, _payer);
+        }
         emit TicketIssued(_service, msg.sender, _buyFor, _tariffIndex);
     }
 
@@ -459,7 +460,7 @@ contract SubscriptionRegistry is Ownable {
             ) {++availableCount;}
         }
         
-        Tariff[]  memory tarifs = new Tariff[](availableCount);
+        Tariff[]  memory tariffs = new Tariff[](availableCount);
         uint256[] memory indexes = new uint256[](availableCount);
         for (uint256 i; i < agentServiceRegistry[_service][_agent].length; ++i){
             if (availableTariffs[_service][
@@ -467,14 +468,14 @@ contract SubscriptionRegistry is Ownable {
                 ].subscription.isAvailable
             ) 
             {
-                tarifs[availableCount - 1] = availableTariffs[_service][
+                tariffs[availableCount - 1] = availableTariffs[_service][
                   agentServiceRegistry[_service][_agent][i]
                 ];
                 indexes[availableCount - 1] = agentServiceRegistry[_service][_agent][i];
                 --availableCount;
             }
         }
-        return (indexes, tarifs);
+        return (indexes, tariffs);
     }    
     ////////////////////////////////////////////////////////////////
     //////////     Admins                                     //////
