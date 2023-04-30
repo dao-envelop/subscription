@@ -103,7 +103,12 @@ def test_buy_subscription(accounts, dai, weth, sub_reg, minter1, EnvelopAgentWit
 	sub_reg.setMainWrapper(wrapper.address, {"from": accounts[0]})
 
 	agent.buySubscription(minter1.address, 3, 3, accounts[2], accounts[1], {"from": accounts[1]})
-	logging.info(sub_reg.getTariffsForService(minter1.address))
+
+	assert len(sub_reg.getAvailableAgentsTariffForService(agent, minter1)[0]) == 8
+	assert sub_reg.getAvailableAgentsTariffForService(agent, minter1)[0] == [1,2,3,4,5,6,7,8][::-1]
+
+	assert len(sub_reg.getAvailableAgentsTariffForService(minter1, minter1)[0]) == 6
+	assert sub_reg.getAvailableAgentsTariffForService(minter1, minter1)[0] == [1,2,3,4,5,6][::-1]
 
 
 	
