@@ -1,8 +1,6 @@
 // SPDX-License-Identifier: MIT
-pragma solidity 0.8.16;
+pragma solidity 0.8.19;
 
-//import "@envelopv1/interfaces/ITrustedWrapper.sol";
-//import "@envelopv1/interfaces/ISubscriptionManager.sol";
 import "@openzeppelin/contracts/token/ERC721/extensions/ERC721URIStorage.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
 import '../ServiceProvider.sol';

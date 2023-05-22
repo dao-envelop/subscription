@@ -11,7 +11,7 @@
 ///  fares, tickets
 
 
-pragma solidity 0.8.16;
+pragma solidity 0.8.19;
 
 import "@openzeppelin/contracts/token/ERC20/utils/SafeERC20.sol";
 import {Ticket} from "../contracts/SubscriptionRegistry.sol";
