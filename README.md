@@ -1,3 +1,5 @@
+![GitHub last commit](https://img.shields.io/github/last-commit/dao-envelop/subscription)
+![GitHub release (latest by date)](https://img.shields.io/github/v/release/dao-envelop/subscription)
 # Envelop On-Chain Subscription Platform
 The subscription platform operates with the following role model (it is assumed that the actor with the role is implemented as a contract):
 - **Service Provider** is a contract whose services are sold by subscription.
@@ -7,7 +9,7 @@ The subscription platform operates with the following role model (it is assumed 
 ## Usage with eth-brownie framework
 1. Install package
 ```bash
-brownie pm install dao-envelop/subscription@0.0.2		
+brownie pm install dao-envelop/subscription@2.0.0		
 ```
 2. Edit `brownie-config.yaml`, something like
 ```yaml
@@ -15,11 +17,11 @@ dotenv: .env
 compiler:
     solc:
         remappings:
-          - "@envelop-subscription=dao-envelop/subscription@0.0.2"
+          - "@envelop-subscription=dao-envelop/subscription@2.0.0"
 ```
 3. Then you can use @substitution in your Solidity code:
 ```solidity
-import '@envelop/contracts/ServiceAgent.sol';
+import '@envelop-subscription/contracts/ServiceAgent.sol';
 ```
 
 ## Development
