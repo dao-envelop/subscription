@@ -24,14 +24,14 @@ import "../interfaces/ISubscriptionRegistry.sol";
 /// Please see example folder
 abstract contract ServiceProvider {
 
-	address public serviceProvider;
+    address public serviceProvider;
     ISubscriptionRegistry public subscriptionRegistry;
 
-	constructor(address _subscrRegistry) {
+    constructor(address _subscrRegistry) {
         require(_subscrRegistry != address(0), 'Non zero only');
-	 	serviceProvider = address(this);
+        serviceProvider = address(this);
         subscriptionRegistry = ISubscriptionRegistry(_subscrRegistry);
-	}
+    }
 
     function _registerServiceTariff(Tariff memory _newTariff) 
         internal virtual returns(uint256)

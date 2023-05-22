@@ -53,13 +53,13 @@ def agent(accounts, AgentForService):
 
 @pytest.fixture(scope="module")
 def wrapper(accounts, pm):
-    wa = pm('envelopv1').WrapperLightV1
+    wa = pm('dao-envelop/envelop-protocol-v1@1.1.0').WrapperLightV1
     w = accounts[0].deploy(wa)
     yield w
 
 @pytest.fixture(scope="module")
 def wnft721(accounts, pm):
-    wa = pm('envelopv1').EnvelopwNFT721
+    wa = pm('dao-envelop/envelop-protocol-v1@1.1.0').EnvelopwNFT721
     wnft = accounts[0].deploy(wa,"Envelop wNFT", "eNFT", "https://api.envelop.is/metadata/" )
     yield wnft
 
