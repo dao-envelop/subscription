@@ -8,8 +8,6 @@ import '../../ServiceAgent.sol';
 contract EnvelopAgentWithRegistry is ServiceAgent, Ownable {
 
     
-    event TicketSold(address indexed buyer, address indexed service, Ticket ticket);
-    
     function withdrawFeeEther() external onlyOwner {
         _withdrawEther(msg.sender);
         
