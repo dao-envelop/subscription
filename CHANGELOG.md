@@ -25,8 +25,12 @@ see mocks as example.
 - Remove unesed code from Service Provider
 
 ## [0.0.2](https://github.com/dao-envelop/subscription/tree/0.0.2) - 2023-05-18
+### Added
+- EnvelopAgentWithRegistry.sol was added
+- Upgrade getAvailableAgentsTariffForService in SubscriptionRegistry.sol
+- Add possibility to create free tariffs
 ### Fixed
-- AUpdate brownie settings file, README
+- Update brownie settings file, README
 - Examples
 
 ## [0.0.1](https://github.com/dao-envelop/subscription/tree/0.0.1) - 2023-03-18
