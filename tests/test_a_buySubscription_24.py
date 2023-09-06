@@ -14,7 +14,7 @@ def test_buy_subscription(accounts, dai, weth, sub_reg, minter1, EnvelopAgentWit
 	agent = accounts[0].deploy(EnvelopAgentWithRegistry)
 	niftsy = accounts[0].deploy(TokenMock,"NIFTSY MOCK Token", "NIFTSY")
 
-	payOptions = [(niftsy.address, 0,0 )] #without Agent fee
+	payOptions = [(niftsy.address, 0,50 )] #with Agent fee
 	subscriptionType = (0,0,1,True,'0xDDA2F2E159d2Ce413Bd0e1dF5988Ee7A803432E3')
 	tariff1 = (subscriptionType, payOptions)
 

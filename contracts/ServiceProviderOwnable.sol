@@ -107,7 +107,7 @@ contract ServiceProviderOwnable is ServiceProvider, Ownable {
 
     }
 
-    function setSubscriptionRegestry(address _subscrRegistry) external onlyOwner {
+    function setSubscriptionRegistry(address _subscrRegistry) external onlyOwner {
         subscriptionRegistry = ISubscriptionRegistry(_subscrRegistry);
     }
 
