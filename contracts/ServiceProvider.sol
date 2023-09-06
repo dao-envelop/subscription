@@ -110,10 +110,14 @@ abstract contract ServiceProvider {
     function _checkAndFixSubscription(address _user) 
         internal 
         returns (bool ok) 
-    {
+    { 
+        if (isEnabled) {
             ok = subscriptionRegistry.checkAndFixUserSubscription(
                 _user
             );
+        } else {
+            ok = true;
+        }
     }
 
     function _checkUserSubscription(address _user) 
@@ -121,9 +125,13 @@ abstract contract ServiceProvider {
         view 
         returns (bool ok, bool needFix)
     {
+        if (isEnabled) {
             (ok, needFix) = subscriptionRegistry.checkUserSubscription(
                 _user,
                 address(this)  
             );
+        } else {
+            ok = true;
+        }
     }
 }
