@@ -111,4 +111,8 @@ contract ServiceProviderOwnable is ServiceProvider, Ownable {
         subscriptionRegistry = ISubscriptionRegistry(_subscrRegistry);
     }
 
+    function setSubscriptionOnOff(bool _isEnable) external onlyOwner {
+        isEnabled = _isEnable;
+    }
+
 }

@@ -26,6 +26,7 @@ abstract contract ServiceProvider {
 
     address public serviceProvider;
     ISubscriptionRegistry public subscriptionRegistry;
+    bool public isEnabled = true;
 
     constructor(address _subscrRegistry) {
         require(_subscrRegistry != address(0), 'Non zero only');
