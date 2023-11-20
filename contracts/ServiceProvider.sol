@@ -11,7 +11,7 @@
 ///  fares, tickets
 
 
-pragma solidity 0.8.19;
+pragma solidity 0.8.21;
 
 import "../interfaces/ISubscriptionRegistry.sol";
 

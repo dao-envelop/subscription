@@ -11,7 +11,7 @@
 ///  fares, tickets
 
 
-pragma solidity 0.8.19;
+pragma solidity 0.8.21;
 
 import "@openzeppelin/contracts/access/Ownable.sol";
 import "./ServiceProvider.sol";

@@ -2,8 +2,8 @@ dotenv: .env
 compiler:
     solc:
         remappings:
-          - "@openzeppelin=OpenZeppelin/openzeppelin-contracts@4.8.3"
-          - "@envelop-protocol-v1=dao-envelop/envelop-protocol-v1@1.2.0"
+          - "@openzeppelin=OpenZeppelin/openzeppelin-contracts@4.9.3"
+          - "@envelop-protocol-v1=dao-envelop/envelop-protocol-v1@1.3.0"
 dependencies:
-    - OpenZeppelin/openzeppelin-contracts@4.8.3
-    - dao-envelop/envelop-protocol-v1@1.2.0
+    - OpenZeppelin/openzeppelin-contracts@4.9.3
+    - dao-envelop/envelop-protocol-v1@1.3.0
