@@ -27,6 +27,5 @@ import '@envelop-subscription/contracts/ServiceAgent.sol';
 ## Development
 We use Brownie framework for developing and unit test. For run tests
 first please [install it](https://eth-brownie.readthedocs.io/en/stable/install.html)  
-To run long tests you must rename test files in tests folder before running (delete "long_").
 
 So just clone https://github.com/dao-envelop/subscription , install dependencies and good luck!
