@@ -9,13 +9,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 - Factory Example
 
-## [2.2.0](https://github.com/dao-envelop/subscription/tree/2.0.1) - 2023-09-06
+## [2.2.0](https://github.com/dao-envelop/subscription/tree/2.2.0) - 2023-11-20
 ### Added
 - Upgrade solidity version up to 0.8.21
 - Open Zeppelin dependencies upgrade to 4.9.3
 - EnvelopV1 dependencies upgrade to 1.3.0
 
-## [2.1.0](https://github.com/dao-envelop/subscription/tree/2.0.1) - 2023-09-06
+## [2.1.0](https://github.com/dao-envelop/subscription/tree/2.1.0) - 2023-09-06
 ### Added
 - On-Off switch ability in service provider contract
 
