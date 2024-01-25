@@ -64,3 +64,16 @@ $ forge --help
 $ anvil --help
 $ cast --help
 ```
+
+### Add forge to existing Brownie project
+```shell
+$ forge init --force
+$ forge install OpenZeppelin/openzeppelin-contracts@v4.9.3
+$ forge install dao-envelop/envelop-protocol-v1@1.3.0
+$ forge buld
+```
+### First build
+```shell
+git clone git@gitlab.com:ubd2/ubd-market-adapters.git
+git submodule update --init --recursive
+```

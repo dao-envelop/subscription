@@ -5,6 +5,7 @@ libs = ["lib"]
 remappings = [
     "@uniswap/=lib/",
     "@openzeppelin/=lib/openzeppelin-contracts/",
+    "@envelop-protocol-v1/=lib/envelop-protocol-v1/"
 ]
 
 fs_permissions = [
