@@ -1,31 +1,66 @@
-![GitHub last commit](https://img.shields.io/github/last-commit/dao-envelop/subscription)
-![GitHub release (latest by date)](https://img.shields.io/github/v/release/dao-envelop/subscription)
-# Envelop On-Chain Subscription Platform
-The subscription platform operates with the following role model (it is assumed that the actor with the role is implemented as a contract):
-- **Service Provider** is a contract whose services are sold by subscription.
-- **Agent** - a contract that sells a subscription on behalf ofservice provider. May receive sales commission
-- **Platform** - SubscriptionRegistry contract that performs processingsubscriptions, fares, tickets
+## Foundry
 
-## Usage with eth-brownie framework
-1. Install package
-```bash
-brownie pm install dao-envelop/subscription@2.2.0		
-```
-2. Edit `brownie-config.yaml`, something like
-```yaml
-dotenv: .env
-compiler:
-    solc:
-        remappings:
-          - "@envelop-subscription=dao-envelop/subscription@2.2.0"
-```
-3. Then you can use @substitution in your Solidity code:
-```solidity
-import '@envelop-subscription/contracts/ServiceAgent.sol';
+**Foundry is a blazing fast, portable and modular toolkit for Ethereum application development written in Rust.**
+
+Foundry consists of:
+
+-   **Forge**: Ethereum testing framework (like Truffle, Hardhat and DappTools).
+-   **Cast**: Swiss army knife for interacting with EVM smart contracts, sending transactions and getting chain data.
+-   **Anvil**: Local Ethereum node, akin to Ganache, Hardhat Network.
+-   **Chisel**: Fast, utilitarian, and verbose solidity REPL.
+
+## Documentation
+
+https://book.getfoundry.sh/
+
+## Usage
+
+### Build
+
+```shell
+$ forge build
 ```
 
-## Development
-We use Brownie framework for developing and unit test. For run tests
-first please [install it](https://eth-brownie.readthedocs.io/en/stable/install.html)  
+### Test
 
-So just clone https://github.com/dao-envelop/subscription , install dependencies and good luck!
+```shell
+$ forge test
+```
+
+### Format
+
+```shell
+$ forge fmt
+```
+
+### Gas Snapshots
+
+```shell
+$ forge snapshot
+```
+
+### Anvil
+
+```shell
+$ anvil
+```
+
+### Deploy
+
+```shell
+$ forge script script/Counter.s.sol:CounterScript --rpc-url <your_rpc_url> --private-key <your_private_key>
+```
+
+### Cast
+
+```shell
+$ cast <subcommand>
+```
+
+### Help
+
+```shell
+$ forge --help
+$ anvil --help
+$ cast --help
+```
