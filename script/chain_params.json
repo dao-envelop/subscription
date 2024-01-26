@@ -1,0 +1,26 @@
+{   
+    "1": "etherscan.io", 
+    "5":"goerli.etherscan.io",
+    "56":"bscscan.com",
+    "97":"testnet.bscscan.com",
+    "137":"polygonscan.com",
+
+    "31337": {
+        "platform_owner": "0x0000000000000000000000000000000000000011",
+        "wl_assets":["0x0000000000000000000000000000000000000000", "0xA3132c47F933f155D501eDBCE40DD79593FE0cBC"],
+        "wrapperTrustedV2_address": "0x1Eb46D6F1d25604b122985505fD096f5FD5f4134"
+    },
+
+    "42161":"arbiscan.io",
+    "80001":"mumbai.polygonscan.com",  
+    "534352": "scrollscan.com",
+
+    "11155111": {
+        "wl_assets":["0x0000000000000000000000000000000000000000"],
+        "wrapperTrustedV2_address": "0x1Eb46D6F1d25604b122985505fD096f5FD5f4134"
+    },
+
+    "168587773": {
+        "wl_assets":["0x0000000000000000000000000000000000000000"]
+    }
+}

@@ -48,7 +48,15 @@ $ anvil
 ### Deploy
 
 ```shell
-$ forge script script/Counter.s.sol:CounterScript --rpc-url <your_rpc_url> --private-key <your_private_key>
+$ forge script script/Deploy.s.sol:DeployScript --rpc-url blast_sepolia --verifier blockscout --verifier-url 'https://api.routescan.io/v2/network/testnet/evm/168587773/etherscan' --etherscan-api-key "verifyContract" --account ttwo --sender 0xDDA2F2E159d2Ce413Bd0e1dF5988Ee7A803432E3 --broadcast
+```
+
+### Verify
+
+```shell
+$ forge verify-contract <deployed address>  ./contracts/SubscriptionRegistry.sol:SubscriptionRegistry --verifier-url 'https://api.routescan.io/v2/network/testnet/evm/168587773/etherscan' --etherscan-api-key "verifyContract" --num-of-optimizations 200 --compiler-version 0.8.21 --constructor-args $(cast abi-encode "constructor(address param1)" 0xDDA2F2E159d2Ce413Bd0e1dF5988Ee7A803432E3)
+
+$ forge verify-contract <deployed address>  ./contracts/examples/envelopAgent/EnvelopAgentWithRegistry.sol:EnvelopAgentWithRegistry --verifier-url 'https://api.routescan.io/v2/network/testnet/evm/168587773/etherscan' --etherscan-api-key "verifyContract" --num-of-optimizations 200 --compiler-version 0.8.21 
 ```
 
 ### Cast
