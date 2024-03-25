@@ -12,7 +12,12 @@
     },
 
     "42161":"arbiscan.io",
-    "80001":"mumbai.polygonscan.com",  
+    "80001":"mumbai.polygonscan.com",
+    
+    "81457": {
+        "wl_assets":["0x0000000000000000000000000000000000000000"]
+    },
+
     "534352": "scrollscan.com",
 
     "11155111": {

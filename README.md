@@ -45,18 +45,32 @@ $ forge snapshot
 $ anvil
 ```
 
-### Deploy
+### Deploy Blast Sepolia
 
 ```shell
-$ forge script script/Deploy.s.sol:DeployScript --rpc-url blast_sepolia --verifier blockscout --verifier-url 'https://api.routescan.io/v2/network/testnet/evm/168587773/etherscan' --etherscan-api-key "verifyContract" --account ttwo --sender 0xDDA2F2E159d2Ce413Bd0e1dF5988Ee7A803432E3 --broadcast
+$ forge script script/Deploy.s.sol:DeployScript --rpc-url blast_sepolia  --account ttwo --sender 0xDDA2F2E159d2Ce413Bd0e1dF5988Ee7A803432E3 --broadcast
 ```
 
-### Verify
+#### Verify
 
 ```shell
 $ forge verify-contract <deployed address>  ./contracts/SubscriptionRegistry.sol:SubscriptionRegistry --verifier-url 'https://api.routescan.io/v2/network/testnet/evm/168587773/etherscan' --etherscan-api-key "verifyContract" --num-of-optimizations 200 --compiler-version 0.8.21 --constructor-args $(cast abi-encode "constructor(address param1)" 0xDDA2F2E159d2Ce413Bd0e1dF5988Ee7A803432E3)
 
 $ forge verify-contract <deployed address>  ./contracts/examples/envelopAgent/EnvelopAgentWithRegistry.sol:EnvelopAgentWithRegistry --verifier-url 'https://api.routescan.io/v2/network/testnet/evm/168587773/etherscan' --etherscan-api-key "verifyContract" --num-of-optimizations 200 --compiler-version 0.8.21 
+```
+
+### Deploy Blast Mainnet 2024-03-03
+
+```shell
+$ forge script script/Deploy.s.sol:DeployScript --rpc-url blast_mainnet  --account envdeployer --sender 0xE1a8F0a249A87FDB9D8B912E11B198a2709D6d9B --broadcast
+```
+
+#### Verify
+
+```shell
+$ forge verify-contract 0x68247DF83d594af6332bF901a5fF8c3448622774  ./contracts/SubscriptionRegistry.sol:SubscriptionRegistry --verifier-url 'https://api.blastscan.io/api' --etherscan-api-key $BLASTSCAN_TOKEN --num-of-optimizations 200 --compiler-version 0.8.21 --constructor-args $(cast abi-encode "constructor(address param1)" 0xE1a8F0a249A87FDB9D8B912E11B198a2709D6d9B)
+
+$ forge verify-contract 0xD5E1cDfCf6A9fdc68997a90E8B5ee962e536a0D8  ./contracts/examples/envelopAgent/EnvelopAgentWithRegistry.sol:EnvelopAgentWithRegistry --verifier-url 'https://api.blastscan.io/api' --etherscan-api-key $BLASTSCAN_TOKEN --num-of-optimizations 200 --compiler-version 0.8.21 
 ```
 
 ### Cast
@@ -82,6 +96,6 @@ $ forge buld
 ```
 ### First build
 ```shell
-git clone git@gitlab.com:ubd2/ubd-market-adapters.git
+git clone git@gitlab.com:envelop/subscription.git
 git submodule update --init --recursive
 ```
